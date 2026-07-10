@@ -1,0 +1,10 @@
+[90m= [39m[34;4mApp\Models\ProfilKlinik[39;24m {#7883
+    [34mid_profil[39m: [35m1[39m,
+    [34msejarah_singkat[39m: [32m"[39m[32msaya akan lawan[39m[32m"[39m,
+    [34mvisi_misi[39m: [32m"[39m[32mVisi: Menjadi klinik kesehatan terpercaya yang memberikan pelayanan prima bagi masyarakat.[39m\\[32mn[39m\\[32mnMisi:[39m\\[32mn1) Menyediakan pelayanan kesehatan yang berkualitas[39m\\[32mn2) Meningkatkan akses layanan kesehatan[39m\\[32mn3) Memberikan edukasi kesehatan kepada masyarakat[39m[32m"[39m,
+    [34mstruktur_organisasi[39m: [32m"[39m[32mKetua Yayasan: KH. Syaeful Majid Darkino[39m\\[32mnKepala Klinik: Dr. [Nama Dokter][39m\\[32mnKoordinator Admin: Amelia Kusniawati[39m[32m"[39m,
+    [34mnomor_izin[39m: [32m"[39m[32mSK-1234/Dinkes/Cilacap/2026[39m[32m"[39m,
+    [34mupdated_at[39m: [36mnull[39m,
+    [34mvisi[39m: [32m"[39m[32mheiiiii antek antek asingg[39m[32m"[39m,
+    [34mmisi[39m: [32m"[39m[32mhidup jokowi[39m[32m"[39m,
+  }
