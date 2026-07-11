@@ -28,6 +28,9 @@ COPY . .
 # 7. Install dependencies Laravel
 RUN composer install --no-dev --optimize-autoloader
 
+# file .env sebelum generate key
+RUN touch .env
+
 # 8. Generate APP_KEY
 RUN php artisan key:generate
 
