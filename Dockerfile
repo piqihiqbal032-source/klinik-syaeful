@@ -17,16 +17,18 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 WORKDIR /var/www/html
 
-# 1. Copy semua file dulu
 COPY . .
 
-# 2. Install Composer 
+# Install dependency dulu
 RUN composer install --no-dev --optimize-autoloader
 
-# 3. Buat .env dan generate key (SETELAH composer install)
+# Setup environment
 RUN if [ -f .env.example ]; then cp .env.example .env; else touch .env; fi
 RUN php artisan key:generate
 RUN php artisan storage:link --force
+
+# Jalankan migration (BUAT TABEL)
+RUN php artisan migrate --force
 
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 RUN chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
