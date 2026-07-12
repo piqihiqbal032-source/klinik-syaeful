@@ -28,7 +28,7 @@ class LayananController extends Controller
         ]);
 
         LayananMedis::create($request->all());
-        return redirect()->route('admin.layanan')->with('success', 'Layanan berhasil ditambahkan!');
+        return redirect()->route('admin.layanan.index')->with('success', 'Layanan berhasil ditambahkan!');
     }
 
     public function edit($id)
@@ -48,13 +48,13 @@ class LayananController extends Controller
         ]);
 
         $layanan->update($request->all());
-        return redirect()->route('admin.layanan')->with('success', 'Layanan berhasil diperbarui!');
+        return redirect()->route('admin.layanan.index')->with('success', 'Layanan berhasil diperbarui!');
     }
 
     public function destroy($id)
     {
         $layanan = LayananMedis::findOrFail($id);
         $layanan->delete();
-        return redirect()->route('admin.layanan')->with('success', 'Layanan berhasil dihapus!');
+        return redirect()->route('admin.layanan.index')->with('success', 'Layanan berhasil dihapus!');
     }
 }
