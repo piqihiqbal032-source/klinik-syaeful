@@ -29,7 +29,7 @@
         <button type="submit" class="bg-green-700 text-white px-6 py-2 rounded-lg hover:bg-green-800">
             Update
         </button>
-        <a href="{{ route('admin.layanan') }}" class="bg-gray-500 text-white px-6 py-2 rounded-lg hover:bg-gray-600 ml-2">Batal</a>
+        <a href="{{ route('admin.layanan.index') }}" class="bg-gray-500 text-white px-6 py-2 rounded-lg hover:bg-gray-600 ml-2">Batal</a>
     </form>
 </div>
 @endsection

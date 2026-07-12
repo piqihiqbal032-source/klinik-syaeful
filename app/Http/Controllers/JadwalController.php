@@ -9,6 +9,6 @@ class JadwalController extends Controller
     public function index()
     {
         $jadwal = JadwalDokter::all();
-        return view('jadwal', compact('jadwal'));
+        return redirect()->route('admin.jadwal.index')->with('success', 'Jadwal berhasil ditambahkan!');
     }
 }

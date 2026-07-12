@@ -8,12 +8,10 @@ class LayananMedis extends Model
 {
     protected $table = 'layanan_medis';
     protected $primaryKey = 'id_layanan';
-    
     protected $fillable = [
-    'alamat_lengkap',
-    'nomor_telepon',
-    'email',
-    'media_sosial',
-    'link_peta'
+    'nama_layanan',
+    'deskripsi',
+    'gambar',
+    'status_aktif'
     ];
 }
