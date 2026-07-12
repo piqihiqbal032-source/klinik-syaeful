@@ -29,6 +29,7 @@ RUN php artisan storage:link --force
 
 # Jalankan migration (BUAT TABEL)
 RUN php artisan migrate --force
+RUN php artisan db:seed --force
 
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 RUN chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
