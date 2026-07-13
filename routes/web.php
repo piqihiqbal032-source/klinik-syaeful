@@ -71,7 +71,7 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
     Route::put('/layanan/{id}', [AdminLayananController::class, 'update'])->name('admin.layanan.update');
     Route::delete('/layanan/{id}', [AdminLayananController::class, 'destroy'])->name('admin.layanan.destroy');
 
-    // 4d. CRUD Jadwal Dokter (AKAN DITAMBAHKAN)
+    // 4d. CRUD Jadwal Dokter 
     Route::get('/jadwal', [AdminJadwalController::class, 'index'])->name('admin.jadwal.index');
     Route::get('/jadwal/create', [AdminJadwalController::class, 'create'])->name('admin.jadwal.create');
     Route::post('/jadwal', [AdminJadwalController::class, 'store'])->name('admin.jadwal.store');
@@ -79,7 +79,7 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
     Route::put('/jadwal/{id}', [AdminJadwalController::class, 'update'])->name('admin.jadwal.update');
     Route::delete('/jadwal/{id}', [AdminJadwalController::class, 'destroy'])->name('admin.jadwal.destroy');
 
-    // 4e. CRUD Kontak Klinik (AKAN DITAMBAHKAN)
+    // 4e. CRUD Kontak Klinik 
     Route::get('/kontak', [AdminKontakController::class, 'index'])->name('admin.kontak.index');
     Route::put('/kontak/{id}', [AdminKontakController::class, 'update'])->name('admin.kontak.update');
 
