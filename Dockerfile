@@ -23,9 +23,11 @@ COPY . .
 RUN composer install --no-dev --optimize-autoloader
 
 # Setup environment
-RUN if [ -f .env.example ]; then cp .env.example .env; else touch .env; fi
+RUN if [ -f .env.production ]; then cp .env.production .env; else touch .env; fi
 RUN php artisan key:generate
 RUN php artisan storage:link --force
+RUN php artisan config:clear
+RUN php artisan cache:clear
 
 # Jalankan migration (BUAT TABEL)
 RUN php artisan migrate --force
