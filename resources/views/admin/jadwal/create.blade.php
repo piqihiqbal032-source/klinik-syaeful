@@ -1,6 +1,15 @@
 @extends('layouts.admin')
 
 @section('content')
+@if ($errors->any())
+    <div class="bg-red-100 text-red-700 px-4 py-2 rounded mb-4">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
 <div class="bg-white rounded-lg shadow-lg p-6">
     <h1 class="text-2xl font-bold text-green-800 mb-6">Tambah Jadwal Dokter</h1>
 
