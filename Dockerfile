@@ -34,7 +34,13 @@ RUN php artisan config:clear
 RUN php artisan cache:clear || true
 RUN echo "=== Testing Database Connection ==="
 RUN php artisan tinker --execute="try { DB::connection()->getPdo(); echo 'Connected!'; } catch(Exception $e) { echo 'Error: '.$e->getMessage(); }" || true
-RUN echo "=== DB_CONNECTION ===" && grep DB_CONNECTION .env || echo "DB_CONNECTION NOT FOUND"
+RUN echo "=== Environment Variables ==="
+RUN echo "DB_CONNECTION: $(grep DB_CONNECTION .env || echo 'NOT FOUND')"
+RUN echo "DB_HOST: $(grep DB_HOST .env || echo 'NOT FOUND')"
+RUN echo "DB_DATABASE: $(grep DB_DATABASE .env || echo 'NOT FOUND')"
+RUN echo "DB_USERNAME: $(grep DB_USERNAME .env || echo 'NOT FOUND')"
+RUN echo "DB_PASSWORD: $(grep DB_PASSWORD .env || echo 'NOT FOUND')"
+RUN echo "=== End of Environment Variables ==="
 
 # Jalankan migration (BUAT TABEL)
 RUN php artisan migrate --force
