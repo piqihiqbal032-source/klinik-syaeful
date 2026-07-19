@@ -28,6 +28,17 @@ RUN php artisan key:generate
 RUN php artisan storage:link --force
 RUN php artisan config:clear
 
+# Debug: Cek koneksi database
+RUN php artisan config:clear
+RUN php artisan cache:clear || true
+RUN echo "=== Testing Database Connection ==="
+RUN php artisan tinker --execute="try { DB::connection()->getPdo(); echo 'Connected!'; } catch(Exception $e) { echo 'Error: '.$e->getMessage(); }" || true
+RUN echo "=== DB_CONNECTION ===" && grep DB_CONNECTION .env || echo "DB_CONNECTION NOT FOUND"
+
+# Jalankan migration
+RUN php artisan migrate --force
+RUN php artisan db:seed --force
+
 # Jalankan migration (BUAT TABEL)
 RUN php artisan migrate --force
 RUN php artisan db:seed --force
