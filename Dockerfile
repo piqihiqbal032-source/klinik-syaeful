@@ -11,7 +11,7 @@ RUN apt-get update && apt-get install -y \
     nodejs \
     npm
 
-RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd
+RUN docker-php-ext-install pdo_mysql pdo_pgsql mbstring exif pcntl bcmath gd
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
@@ -34,10 +34,6 @@ RUN php artisan cache:clear || true
 RUN echo "=== Testing Database Connection ==="
 RUN php artisan tinker --execute="try { DB::connection()->getPdo(); echo 'Connected!'; } catch(Exception $e) { echo 'Error: '.$e->getMessage(); }" || true
 RUN echo "=== DB_CONNECTION ===" && grep DB_CONNECTION .env || echo "DB_CONNECTION NOT FOUND"
-
-# Jalankan migration
-RUN php artisan migrate --force
-RUN php artisan db:seed --force
 
 # Jalankan migration (BUAT TABEL)
 RUN php artisan migrate --force
