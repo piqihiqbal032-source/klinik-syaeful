@@ -5,6 +5,7 @@ namespace App\Http\Middleware;
 use Closure;
 use App\Models\Visitor;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
 class VisitorCounter
 {
@@ -13,7 +14,6 @@ class VisitorCounter
         try {
             $today = date('Y-m-d');
             
-            // Cek apakah tabel visitors ada
             $visitor = Visitor::where('date', $today)->first();
             
             if ($visitor) {
