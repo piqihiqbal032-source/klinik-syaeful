@@ -30,7 +30,7 @@
                             'Laboratorium' => 'fa-flask',
                             'EKG' => 'fa-heartbeat',
                             'KB Suntik & Implan' => 'fa-syringe',
-                            'Bedah Minor' => 'fa-scalpel',
+                            'Bedah Minor' => 'fa-kit-medical',
                             'Khitan' => 'fa-cut',
                             'Swab Antigen' => 'fa-vial',
                             'Home Care' => 'fa-house-medical',

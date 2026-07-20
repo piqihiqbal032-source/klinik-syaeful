@@ -70,12 +70,12 @@
                            class="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center hover:bg-blue-700 hover:scale-110 transition">
                             <i class="fab fa-facebook-f text-white text-sm"></i>
                         </a>
-                        @endif
 
+                        @endif
                         @if(!empty($kontak->twitter))
                         <a href="{{ $kontak->twitter }}" target="_blank" 
-                           class="w-10 h-10 bg-black rounded-full flex items-center justify-center hover:bg-gray-800 hover:scale-110 transition">
-                            <i class="fab fa-twitter text-white text-sm"></i>
+                        class="w-10 h-10 bg-black rounded-full flex items-center justify-center hover:bg-gray-800 hover:scale-110 transition">
+                            <i class="fab fa-x-twitter text-white text-sm"></i>
                         </a>
                         @endif
 
