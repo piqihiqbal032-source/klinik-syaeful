@@ -10,17 +10,23 @@ class VisitorCounter
 {
     public function handle($request, Closure $next)
     {
-        $today = date('Y-m-d');
-        
-        $visitor = Visitor::where('date', $today)->first();
-        
-        if ($visitor) {
-            $visitor->increment('count');
-        } else {
-            Visitor::create([
-                'date' => $today,
-                'count' => 1
-            ]);
+        try {
+            $today = date('Y-m-d');
+            
+            // Cek apakah tabel visitors ada
+            $visitor = Visitor::where('date', $today)->first();
+            
+            if ($visitor) {
+                $visitor->increment('count');
+            } else {
+                Visitor::create([
+                    'date' => $today,
+                    'count' => 1
+                ]);
+            }
+        } catch (\Exception $e) {
+            // Jika error, abaikan (tidak mengganggu website)
+            // Log error jika perlu
         }
         
         return $next($request);
