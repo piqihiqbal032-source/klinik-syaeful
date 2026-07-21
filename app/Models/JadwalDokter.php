@@ -8,8 +8,15 @@ class JadwalDokter extends Model
 {
     protected $table = 'jadwal_dokter';
     protected $primaryKey = 'id_jadwal';
-    
+
     protected $fillable = [
-        'nama_dokter', 'hari_praktik', 'jam_mulai', 'jam_selesai', 'status'
+        'nama_dokter',
+        'hari_praktik',
+        'jam_mulai',
+        'jam_selesai'
+    ];
+
+    protected $casts = [
+        'hari_praktik' => 'array' 
     ];
 }

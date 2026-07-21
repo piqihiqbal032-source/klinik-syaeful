@@ -23,13 +23,35 @@ class JadwalController extends Controller
     {
         $request->validate([
             'nama_dokter' => 'required|max:100',
-            'hari_praktik' => 'required',
+            'hari' => 'required|array',
             'jam_mulai' => 'required',
             'jam_selesai' => 'required|after:jam_mulai',
-            'status' => 'required|in:aktif,libur',
         ]);
 
-        JadwalDokter::create($request->all());
+        // Default semua hari libur, lalu aktifkan yang dicentang
+        $hari = [
+            'senin' => 'libur',
+            'selasa' => 'libur',
+            'rabu' => 'libur',
+            'kamis' => 'libur',
+            'jumat' => 'libur',
+            'sabtu' => 'libur',
+            'minggu' => 'libur'
+        ];
+
+        foreach ($request->hari as $h) {
+            if (array_key_exists($h, $hari)) {
+                $hari[$h] = 'aktif';
+            }
+        }
+
+        JadwalDokter::create([
+            'nama_dokter' => $request->nama_dokter,
+            'hari_praktik' => $hari,
+            'jam_mulai' => $request->jam_mulai,
+            'jam_selesai' => $request->jam_selesai,
+        ]);
+
         return redirect()->route('admin.jadwal.index')->with('success', 'Jadwal berhasil ditambahkan!');
     }
 
@@ -45,20 +67,40 @@ class JadwalController extends Controller
 
         $request->validate([
             'nama_dokter' => 'required|max:100',
-            'hari_praktik' => 'required',
+            'hari' => 'required|array',
             'jam_mulai' => 'required',
             'jam_selesai' => 'required|after:jam_mulai',
-            'status' => 'required|in:aktif,libur',
         ]);
 
-        $jadwal->update($request->all());
+        $hari = [
+            'senin' => 'libur',
+            'selasa' => 'libur',
+            'rabu' => 'libur',
+            'kamis' => 'libur',
+            'jumat' => 'libur',
+            'sabtu' => 'libur',
+            'minggu' => 'libur'
+        ];
+
+        foreach ($request->hari as $h) {
+            if (array_key_exists($h, $hari)) {
+                $hari[$h] = 'aktif';
+            }
+        }
+
+        $jadwal->update([
+            'nama_dokter' => $request->nama_dokter,
+            'hari_praktik' => $hari,
+            'jam_mulai' => $request->jam_mulai,
+            'jam_selesai' => $request->jam_selesai,
+        ]);
+
         return redirect()->route('admin.jadwal.index')->with('success', 'Jadwal berhasil diperbarui!');
     }
 
     public function destroy($id)
     {
-        $jadwal = JadwalDokter::findOrFail($id);
-        $jadwal->delete();
+        JadwalDokter::findOrFail($id)->delete();
         return redirect()->route('admin.jadwal.index')->with('success', 'Jadwal berhasil dihapus!');
     }
 }
