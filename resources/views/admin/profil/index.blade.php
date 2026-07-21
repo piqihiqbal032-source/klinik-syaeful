@@ -77,14 +77,8 @@
             </button>
         </div>
         @endforeach
-    </div>
-    
-    <button type="button" onclick="tambahStruktur()" 
-            class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 mt-2">
-        <i class="fas fa-plus mr-2"></i> Tambah Baris
-    </button>
-</div>
-            <button type="button" onclick="tambahStruktur()" 
+        </div>
+                <button type="button" onclick="tambahStruktur()" 
                     class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 mt-2">
                 <i class="fas fa-plus mr-2"></i> Tambah Baris
             </button>
