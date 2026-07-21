@@ -28,6 +28,9 @@ Route::get('/layanan', [LayananController::class, 'index'])->name('layanan');
 // Halaman Jadwal Publik
 Route::get('/jadwal', [JadwalController::class, 'index'])->name('jadwal');
 
+//Halaman detail jadwal dokter
+Route::get('/jadwal/{id}', [JadwalController::class, 'show'])->name('jadwal.detail');
+
 // Halaman Kontak Publik
 Route::get('/kontak', [KontakController::class, 'index'])->name('kontak');
 
@@ -83,6 +86,10 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
     Route::get('/kontak', [AdminKontakController::class, 'index'])->name('admin.kontak.index');
     Route::put('/kontak/{id}', [AdminKontakController::class, 'update'])->name('admin.kontak.update');
 
+    // Route untuk tambah/hapus libur (AJAX)
+    Route::post('/jadwal/{id}/add-libur', [AdminJadwalController::class, 'addLibur'])->name('admin.jadwal.add-libur');
+    Route::delete('/jadwal/libur/{id}', [AdminJadwalController::class, 'deleteLibur'])->name('admin.jadwal.delete-libur');
+    
     });
 
     // 4f. Kelola Admin

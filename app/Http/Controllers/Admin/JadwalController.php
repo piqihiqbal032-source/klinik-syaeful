@@ -97,7 +97,37 @@ class JadwalController extends Controller
 
         return redirect()->route('admin.jadwal.index')->with('success', 'Jadwal berhasil diperbarui!');
     }
+        // TAMBAH LIBUR KHUSUS
+        public function addLibur(Request $request, $id)
+        {
+            $request->validate([
+                'tanggal' => 'required|date',
+                'keterangan' => 'nullable|string'
+            ]);
 
+            $libur = \App\Models\PengumumanLibur::create([
+                'dokter_id' => $id,
+                'tanggal' => $request->tanggal,
+                'keterangan' => $request->keterangan ?? 'Libur'
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'id' => $libur->id,
+                'tanggal' => date('d/m/Y', strtotime($libur->tanggal)),
+                'keterangan' => $libur->keterangan
+            ]);
+        }
+
+        // HAPUS LIBUR KHUSUS
+        public function deleteLibur($id)
+        {
+            $libur = \App\Models\PengumumanLibur::findOrFail($id);
+            $libur->delete();
+
+            return response()->json(['success' => true]);
+        }
+            
     public function destroy($id)
     {
         JadwalDokter::findOrFail($id)->delete();
