@@ -11,17 +11,33 @@
     </div>
 </section>
 
-<!-- ============================================================ -->
+<!-- MOTO & TUJUAN -->
+<section class="py-8 bg-white">
+    <div class="container mx-auto px-4 max-w-4xl">
+        @if($profil->moto)
+        <div class="text-center mb-6">
+            <p class="text-2xl italic text-[#10453f] font-light">"{{ $profil->moto }}"</p>
+        </div>
+        @endif
+
+        @if($profil->tujuan)
+        <div class="bg-green-50 rounded-2xl p-6 border border-green-100 mb-8">
+            <h2 class="text-xl font-bold text-[#10453f] mb-2 flex items-center">
+                <i class="fas fa-bullseye mr-3 text-[#10453f]"></i> Tujuan
+            </h2>
+            <p class="text-gray-700 leading-relaxed">{{ $profil->tujuan }}</p>
+        </div>
+        @endif
+    </div>
+</section>
+
 <!-- KONTEN 2 KOLOM -->
-<!-- ============================================================ -->
 <section class="py-16 bg-white">
     <div class="container mx-auto px-4 max-w-6xl">
         
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
             
-            <!-- ============================================================ -->
             <!-- KOLOM KIRI -->
-            <!-- ============================================================ -->
             <div>
                 
                 <!-- SEJARAH -->
@@ -91,17 +107,6 @@
                     @else
                         <p class="text-gray-500">Belum ada data misi.</p>
                     @endif
-                </div>
-
-                <!-- NOMOR IZIN -->
-                <div>
-                    <h2 class="text-2xl md:text-3xl font-bold text-[#10453f] mb-2 flex items-center">
-                        <i class="fas fa-certificate mr-3 text-[#10453f]"></i> NOMOR IZIN OPERASIONAL
-                    </h2>
-                    <div class="w-16 h-1 bg-[#10453f] mb-4 rounded-full"></div>
-                    <p class="text-xl font-bold text-[#10453f] tracking-wider">
-                        {{ $profil->nomor_izin ?? 'Belum ada data' }}
-                    </p>
                 </div>
 
             </div>
