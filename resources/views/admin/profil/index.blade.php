@@ -50,26 +50,40 @@
             <p class="text-xs text-gray-400 mt-1">Tujuan utama didirikannya klinik</p>
         </div>
 
-        <!-- STRUKTUR ORGANISASI -->
-        
+       <!-- STRUKTUR ORGANISASI -->
         <div class="mb-4">
             <label class="block text-gray-700 font-semibold mb-2">Struktur Organisasi</label>
             <p class="text-xs text-gray-400 mb-2">Klik "Tambah Baris" untuk menambah jabatan. Klik "Hapus" untuk menghapus baris.</p>
             
             <div id="struktur-container">
-
-                <div class="struktur-item flex items-center gap-2 mb-2">
-                    <input type="text" name="struktur[]" value="{{ trim($item) }}" 
-                           class="flex-1 border border-gray-300 rounded-lg px-4 py-2" 
-                           placeholder="Jabatan: Nama">
-                    <button type="button" onclick="hapusStruktur(this)" 
-                            class="bg-red-500 text-white px-3 py-2 rounded-lg hover:bg-red-600">
-                        <i class="fas fa-trash"></i>
-                    </button>
-                </div>
-                @endforeach
-            </div>
-            
+                @php
+                    $struktur = [];
+                    if (!empty($profil->struktur_organisasi)) {
+                        $struktur = explode("\n", trim($profil->struktur_organisasi));
+                    }
+                    if (empty($struktur) || (count($struktur) == 1 && empty($struktur[0]))) {
+                        $struktur = ['Ketua Yayasan: KH. Syaeful Majid Darkino', 'Kepala Klinik: Dr. [Nama Dokter]', 'Koordinator Admin: Amelia Kusniawati'];
+                    }
+                @endphp
+                
+                @foreach($struktur as $index => $item)
+        <div class="struktur-item flex items-center gap-2 mb-2">
+            <input type="text" name="struktur[]" value="{{ trim($item) }}" 
+                   class="flex-1 border border-gray-300 rounded-lg px-4 py-2" 
+                   placeholder="Jabatan: Nama">
+            <button type="button" onclick="hapusStruktur(this)" 
+                    class="bg-red-500 text-white px-3 py-2 rounded-lg hover:bg-red-600">
+                <i class="fas fa-trash"></i>
+            </button>
+        </div>
+        @endforeach
+    </div>
+    
+    <button type="button" onclick="tambahStruktur()" 
+            class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 mt-2">
+        <i class="fas fa-plus mr-2"></i> Tambah Baris
+    </button>
+</div>
             <button type="button" onclick="tambahStruktur()" 
                     class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 mt-2">
                 <i class="fas fa-plus mr-2"></i> Tambah Baris
