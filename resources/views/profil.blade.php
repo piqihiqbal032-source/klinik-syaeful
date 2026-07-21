@@ -11,26 +11,6 @@
     </div>
 </section>
 
-<!-- MOTO & TUJUAN -->
-<section class="py-8 bg-white">
-    <div class="container mx-auto px-4 max-w-4xl">
-        @if($profil->moto)
-        <div class="text-center mb-6">
-            <p class="text-2xl italic text-[#10453f] font-light">"{{ $profil->moto }}"</p>
-        </div>
-        @endif
-
-        @if($profil->tujuan)
-        <div class="bg-green-50 rounded-2xl p-6 border border-green-100 mb-8">
-            <h2 class="text-xl font-bold text-[#10453f] mb-2 flex items-center">
-                <i class="fas fa-bullseye mr-3 text-[#10453f]"></i> Tujuan
-            </h2>
-            <p class="text-gray-700 leading-relaxed">{{ $profil->tujuan }}</p>
-        </div>
-        @endif
-    </div>
-</section>
-
 <!-- KONTEN 2 KOLOM -->
 <section class="py-16 bg-white">
     <div class="container mx-auto px-4 max-w-6xl">
@@ -48,6 +28,17 @@
                         {{ $profil->sejarah_singkat ?? 'Belum ada data sejarah.' }}
                     </p>
                 </div>
+
+                <!-- MOTO -->
+                @if($profil->moto)
+                <div class="mb-10">
+                    <h2 class="text-2xl md:text-3xl font-bold text-[#10453f] mb-2">Moto Klinik</h2>
+                    <div class="w-16 h-1 bg-[#10453f] mb-4 rounded-full"></div>
+                    <div class="bg-green-50 rounded-2xl p-4 border-l-4 border-[#10453f]">
+                        <p class="text-xl italic text-[#10453f] font-light text-center">"{{ $profil->moto }}"</p>
+                    </div>
+                </div>
+                @endif
 
                 <!-- STRUKTUR ORGANISASI -->
                 <div>
@@ -73,11 +64,20 @@
 
             </div>
 
-            <!-- ============================================================ -->
             <!-- KOLOM KANAN -->
-            <!-- ============================================================ -->
             <div>
                 
+                <!-- TUJUAN -->
+                @if($profil->tujuan)
+                <div class="mb-6">
+                    <h2 class="text-2xl md:text-3xl font-bold text-[#10453f] mb-2 flex items-center">
+                        <i class="fas fa-flag-checkered mr-3 text-[#10453f]"></i> Tujuan
+                    </h2>
+                    <div class="w-16 h-1 bg-[#10453f] mb-4 rounded-full"></div>
+                    <p class="text-gray-700 leading-relaxed">{{ $profil->tujuan }}</p>
+                </div>
+                @endif
+
                 <!-- VISI -->
                 <div class="mb-6">
                     <h2 class="text-2xl md:text-3xl font-bold text-[#10453f] mb-2">Visi</h2>
