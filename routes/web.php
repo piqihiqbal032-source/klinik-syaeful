@@ -16,22 +16,11 @@ use App\Http\Controllers\Admin\AdminController;
 // 1. HALAMAN PUBLIK
 // ============================================================
 
-// Halaman Utama
 Route::get('/', [HomeController::class, 'index'])->name('home');
-
-// Halaman Profil Publik (MENGAMBIL DATA DARI DATABASE)
 Route::get('/profil', [App\Http\Controllers\ProfilController::class, 'index'])->name('profil');
-
-// Halaman Layanan Publik
 Route::get('/layanan', [LayananController::class, 'index'])->name('layanan');
-
-// Halaman Jadwal Publik
 Route::get('/jadwal', [JadwalController::class, 'index'])->name('jadwal');
-
-//Halaman detail jadwal dokter
 Route::get('/jadwal/{id}', [JadwalController::class, 'show'])->name('jadwal.detail');
-
-// Halaman Kontak Publik
 Route::get('/kontak', [KontakController::class, 'index'])->name('kontak');
 
 
@@ -54,7 +43,7 @@ Route::get('/dashboard', function () {
 
 
 // ============================================================
-// 4. HALAMAN ADMIN
+// 4. HALAMAN ADMIN (WAJIB LOGIN)
 // ============================================================
 
 Route::middleware(['auth'])->prefix('admin')->group(function () {
@@ -74,7 +63,7 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
     Route::put('/layanan/{id}', [AdminLayananController::class, 'update'])->name('admin.layanan.update');
     Route::delete('/layanan/{id}', [AdminLayananController::class, 'destroy'])->name('admin.layanan.destroy');
 
-    // 4d. CRUD Jadwal Dokter 
+    // 4d. CRUD Jadwal Dokter
     Route::get('/jadwal', [AdminJadwalController::class, 'index'])->name('admin.jadwal.index');
     Route::get('/jadwal/create', [AdminJadwalController::class, 'create'])->name('admin.jadwal.create');
     Route::post('/jadwal', [AdminJadwalController::class, 'store'])->name('admin.jadwal.store');
@@ -82,24 +71,29 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
     Route::put('/jadwal/{id}', [AdminJadwalController::class, 'update'])->name('admin.jadwal.update');
     Route::delete('/jadwal/{id}', [AdminJadwalController::class, 'destroy'])->name('admin.jadwal.destroy');
 
-    // 4e. CRUD Kontak Klinik 
+    // 4e. CRUD Kontak Klinik
     Route::get('/kontak', [AdminKontakController::class, 'index'])->name('admin.kontak.index');
     Route::put('/kontak/{id}', [AdminKontakController::class, 'update'])->name('admin.kontak.update');
 
-    // Route untuk tambah/hapus libur (AJAX)
+    // 4f. Route untuk tambah/hapus libur (AJAX)
     Route::post('/jadwal/{id}/add-libur', [AdminJadwalController::class, 'addLibur'])->name('admin.jadwal.add-libur');
     Route::delete('/jadwal/libur/{id}', [AdminJadwalController::class, 'deleteLibur'])->name('admin.jadwal.delete-libur');
-    
-    });
 
-    // 4f. Kelola Admin
+    // 4g. Kelola Admin
     Route::get('/admins', [AdminController::class, 'index'])->name('admin.admins.index');
     Route::get('/admins/create', [AdminController::class, 'create'])->name('admin.admins.create');
     Route::post('/admins', [AdminController::class, 'store'])->name('admin.admins.store');
     Route::delete('/admins/{id}', [AdminController::class, 'destroy'])->name('admin.admins.destroy');
 
-    // Ganti Password Admin
+    // 4h. Ganti Password Admin
     Route::get('/admins/{id}/edit-password', [AdminController::class, 'editPassword'])->name('admin.admins.edit-password');
     Route::put('/admins/{id}/update-password', [AdminController::class, 'updatePassword'])->name('admin.admins.update-password');
 
-    require __DIR__.'/auth.php';
+});
+
+
+// ============================================================
+// 5. AUTH ROUTES (BAWAAN BREEZE)
+// ============================================================
+
+require __DIR__.'/auth.php';

@@ -28,7 +28,6 @@ class JadwalController extends Controller
             'jam_selesai' => 'required|after:jam_mulai',
         ]);
 
-        // Default semua hari libur, lalu aktifkan yang dicentang
         $hari = [
             'senin' => 'libur',
             'selasa' => 'libur',
@@ -97,37 +96,45 @@ class JadwalController extends Controller
 
         return redirect()->route('admin.jadwal.index')->with('success', 'Jadwal berhasil diperbarui!');
     }
-        // TAMBAH LIBUR KHUSUS
-        public function addLibur(Request $request, $id)
-        {
-            $request->validate([
-                'tanggal' => 'required|date',
-                'keterangan' => 'nullable|string'
-            ]);
 
-            $libur = \App\Models\PengumumanLibur::create([
-                'dokter_id' => $id,
-                'tanggal' => $request->tanggal,
-                'keterangan' => $request->keterangan ?? 'Libur'
-            ]);
+    // ============================================================
+    // 🔥 TAMBAH LIBUR KHUSUS
+    // ============================================================
+    public function addLibur(Request $request, $id)
+    {
+        $request->validate([
+            'tanggal' => 'required|date',
+            'keterangan' => 'nullable|string'
+        ]);
 
-            return response()->json([
-                'success' => true,
-                'id' => $libur->id,
-                'tanggal' => date('d/m/Y', strtotime($libur->tanggal)),
-                'keterangan' => $libur->keterangan
-            ]);
-        }
+        $libur = \App\Models\PengumumanLibur::create([
+            'dokter_id' => $id,
+            'tanggal' => $request->tanggal,
+            'keterangan' => $request->keterangan ?? 'Libur'
+        ]);
 
-        // HAPUS LIBUR KHUSUS
-        public function deleteLibur($id)
-        {
-            $libur = \App\Models\PengumumanLibur::findOrFail($id);
-            $libur->delete();
+        return response()->json([
+            'success' => true,
+            'id' => $libur->id,
+            'tanggal' => date('d/m/Y', strtotime($libur->tanggal)),
+            'keterangan' => $libur->keterangan
+        ]);
+    }
 
-            return response()->json(['success' => true]);
-        }
-            
+    // ============================================================
+    // 🔥 HAPUS LIBUR KHUSUS
+    // ============================================================
+    public function deleteLibur($id)
+    {
+        $libur = \App\Models\PengumumanLibur::findOrFail($id);
+        $libur->delete();
+
+        return response()->json(['success' => true]);
+    }
+
+    // ============================================================
+    // 🔥 HAPUS JADWAL
+    // ============================================================
     public function destroy($id)
     {
         JadwalDokter::findOrFail($id)->delete();
