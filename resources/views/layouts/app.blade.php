@@ -119,7 +119,7 @@
                 </div>
                 <div>
                     <h4 class="font-bold"><i class="fas fa-envelope mr-2"></i>Email</h4>
-                    <p class="text-sm opacity-80">info@klinik-syaeful.com</p>
+                    <p class="text-sm opacity-80">syaefulmajid.medika@gmail.com</p>
                 </div>
             </div>
             <div class="border-t border-white/20 mt-6 pt-6 text-center text-sm opacity-60">

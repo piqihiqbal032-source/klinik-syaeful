@@ -73,7 +73,7 @@
                 <!-- Twitter -->
                 <div class="flex items-center gap-2">
                     <div class="w-10 h-10 bg-black rounded-full flex items-center justify-center flex-shrink-0">
-                        <i class="fab fa-twitter text-white"></i>
+                        <i class="fab fa-x-twitter text-white"></i>
                     </div>
                     <input type="url" name="twitter" value="{{ $kontak->twitter ?? '' }}" 
                            class="flex-1 border border-gray-300 rounded-lg px-3 py-2" 

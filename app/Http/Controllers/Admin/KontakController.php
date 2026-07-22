@@ -8,12 +8,6 @@ use Illuminate\Http\Request;
 
 class KontakController extends Controller
 {
-    public function index()
-    {
-        $kontak = KontakKlinik::first();
-        return view('admin.kontak.index', compact('kontak'));
-    }
-
     public function update(Request $request, $id)
     {
         $request->validate([
@@ -27,8 +21,15 @@ class KontakController extends Controller
             'link_peta' => 'nullable|string',
         ]);
 
-        $kontak = KontakKlinik::find($id);
-        $kontak->update($request->all());
+        $kontak = KontakKlinik::findOrFail($id);
+
+        // Bersihkan link_peta dari karakter backslash
+        $data = $request->all();
+        if (isset($data['link_peta'])) {
+            $data['link_peta'] = stripslashes($data['link_peta']);
+        }
+
+        $kontak->update($data);
 
         return redirect()->route('admin.kontak.index')->with('success', 'Kontak berhasil diperbarui!');
     }
