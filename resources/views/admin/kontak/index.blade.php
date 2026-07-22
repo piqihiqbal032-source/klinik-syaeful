@@ -24,44 +24,53 @@
         @csrf
         @method('PUT')
 
+        <!-- ALAMAT -->
         <div class="mb-4">
             <label class="block text-gray-700 font-semibold mb-2">Alamat Lengkap</label>
             <textarea name="alamat_lengkap" rows="3" class="w-full border border-gray-300 rounded-lg px-4 py-2">{{ $kontak->alamat_lengkap ?? '' }}</textarea>
         </div>
 
+        <!-- TELEPON -->
         <div class="mb-4">
             <label class="block text-gray-700 font-semibold mb-2">Nomor Telepon</label>
             <input type="text" name="nomor_telepon" value="{{ $kontak->nomor_telepon ?? '' }}" class="w-full border border-gray-300 rounded-lg px-4 py-2">
         </div>
 
+        <!-- EMAIL -->
         <div class="mb-4">
             <label class="block text-gray-700 font-semibold mb-2">Email</label>
             <input type="email" name="email" value="{{ $kontak->email ?? '' }}" class="w-full border border-gray-300 rounded-lg px-4 py-2">
         </div>
 
+        <!-- INSTAGRAM -->
         <div class="mb-4">
             <label class="block text-gray-700 font-semibold mb-2">Instagram</label>
-            <input type="url" name="instagram" value="{{ $kontak->instagram ?? '' }}" class="w-full border border-gray-300 rounded-lg px-4 py-2">
+            <input type="text" name="instagram" value="{{ $kontak->instagram ?? '' }}" class="w-full border border-gray-300 rounded-lg px-4 py-2">
         </div>
 
+        <!-- FACEBOOK -->
         <div class="mb-4">
             <label class="block text-gray-700 font-semibold mb-2">Facebook</label>
-            <input type="url" name="facebook" value="{{ $kontak->facebook ?? '' }}" class="w-full border border-gray-300 rounded-lg px-4 py-2">
+            <input type="text" name="facebook" value="{{ $kontak->facebook ?? '' }}" class="w-full border border-gray-300 rounded-lg px-4 py-2">
         </div>
 
+        <!-- TWITTER / X -->
         <div class="mb-4">
-            <label class="block text-gray-700 font-semibold mb-2">Twitter</label>
-            <input type="url" name="twitter" value="{{ $kontak->twitter ?? '' }}" class="w-full border border-gray-300 rounded-lg px-4 py-2">
+            <label class="block text-gray-700 font-semibold mb-2">Twitter / X</label>
+            <input type="text" name="twitter" value="{{ $kontak->twitter ?? '' }}" class="w-full border border-gray-300 rounded-lg px-4 py-2">
         </div>
 
+        <!-- YOUTUBE -->
         <div class="mb-4">
             <label class="block text-gray-700 font-semibold mb-2">YouTube</label>
-            <input type="url" name="youtube" value="{{ $kontak->youtube ?? '' }}" class="w-full border border-gray-300 rounded-lg px-4 py-2">
+            <input type="text" name="youtube" value="{{ $kontak->youtube ?? '' }}" class="w-full border border-gray-300 rounded-lg px-4 py-2">
         </div>
 
+        <!-- LINK MAPS -->
         <div class="mb-4">
             <label class="block text-gray-700 font-semibold mb-2">Link Peta Google Maps</label>
-            <input type="text" name="link_peta" value="{{ $kontak->link_peta ?? '' }}" class="w-full border border-gray-300 rounded-lg px-4 py-2" placeholder="https://www.google.com/maps/embed?pb=...">
+            <textarea name="link_peta" rows="2" class="w-full border border-gray-300 rounded-lg px-4 py-2" placeholder="https://www.google.com/maps/embed?pb=...">{{ $kontak->link_peta ?? '' }}</textarea>
+            <p class="text-xs text-gray-400 mt-1">Copy link embed dari Google Maps (tanpa tanda kutip)</p>
         </div>
 
         <button type="submit" class="bg-green-700 text-white px-6 py-2 rounded-lg hover:bg-green-800">
