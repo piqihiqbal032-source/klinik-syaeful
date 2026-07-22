@@ -35,7 +35,15 @@ class KontakController extends Controller
             if (isset($data['link_peta'])) {
                 $data['link_peta'] = stripslashes($data['link_peta']);
             }
-            
+            $link = $request->link_peta;
+            if ($link) {
+                // Hapus backslash
+                $link = stripslashes($link);
+                // Hapus karakter yang tidak perlu
+                $link = filter_var($link, FILTER_SANITIZE_URL);
+            }
+            $kontak->link_peta = $link;
+                        
             $kontak->update($data);
 
             return redirect()->route('admin.kontak.index')->with('success', 'Kontak berhasil diperbarui!');
@@ -43,4 +51,5 @@ class KontakController extends Controller
             return back()->with('error', 'Error: ' . $e->getMessage());
         }
     }
+    
 }
