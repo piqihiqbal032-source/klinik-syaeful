@@ -16,31 +16,26 @@ class KontakController extends Controller
 
     public function update(Request $request, $id)
     {
-        try {
-            $request->validate([
-                'alamat_lengkap' => 'required',
-                'nomor_telepon' => 'required|max:20',
-                'email' => 'nullable|email|max:100',
-                'instagram' => 'nullable|url|max:255',
-                'facebook' => 'nullable|url|max:255',
-                'twitter' => 'nullable|url|max:255',
-                'youtube' => 'nullable|url|max:255',
-                'link_peta' => 'nullable|string|max:500',
-            ]);
+        // Validasi sederhana
+        $validated = $request->validate([
+            'alamat_lengkap' => 'required',
+            'nomor_telepon' => 'required',
+            'email' => 'nullable|email',
+            'link_peta' => 'nullable|string',
+        ]);
 
-            $kontak = KontakKlinik::findOrFail($id);
-            $data = $request->all();
-            
-            // Bersihkan link_peta dari backslash
-            if (isset($data['link_peta'])) {
-                $data['link_peta'] = stripslashes($data['link_peta']);
-            }
-            
-            $kontak->update($data);
+        // Update data
+        $kontak = KontakKlinik::findOrFail($id);
+        $kontak->alamat_lengkap = $request->alamat_lengkap;
+        $kontak->nomor_telepon = $request->nomor_telepon;
+        $kontak->email = $request->email;
+        $kontak->instagram = $request->instagram;
+        $kontak->facebook = $request->facebook;
+        $kontak->twitter = $request->twitter;
+        $kontak->youtube = $request->youtube;
+        $kontak->link_peta = $request->link_peta;
+        $kontak->save();
 
-            return redirect()->route('admin.kontak.index')->with('success', 'Kontak berhasil diperbarui!');
-        } catch (\Exception $e) {
-            return back()->with('error', 'Error: ' . $e->getMessage());
-        }
+        return redirect()->route('admin.kontak.index')->with('success', 'Kontak berhasil diperbarui!');
     }
 }
