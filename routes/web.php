@@ -91,6 +91,24 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
 
 });
 
+// DEBUG: Cek data kontak
+Route::get('/debug-kontak', function () {
+    $kontak = App\Models\KontakKlinik::first();
+    if ($kontak) {
+        return response()->json([
+            'id' => $kontak->id_kontak,
+            'alamat' => $kontak->alamat_lengkap,
+            'telepon' => $kontak->nomor_telepon,
+            'email' => $kontak->email,
+            'instagram' => $kontak->instagram,
+            'facebook' => $kontak->facebook,
+            'twitter' => $kontak->twitter,
+            'youtube' => $kontak->youtube,
+            'link_peta' => $kontak->link_peta,
+        ]);
+    }
+    return response()->json(['error' => 'Data tidak ditemukan']);
+});
 
 // ============================================================
 // 5. AUTH ROUTES (BAWAAN BREEZE)
