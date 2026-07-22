@@ -27,7 +27,6 @@ class AuthenticatedSessionController extends Controller
         $request->authenticate();
         $request->session()->regenerate();
 
-     // PASTIKAN INI
          return redirect()->to('/admin/dashboard');
     }
 
