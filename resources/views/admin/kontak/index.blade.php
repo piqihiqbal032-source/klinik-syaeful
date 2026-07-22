@@ -96,10 +96,9 @@
         <!-- LINK MAP -->
         <div class="mb-4">
             <label class="block text-gray-700 font-semibold mb-2">Link Peta Google Maps</label>
-            <input type="url" name="link_peta" value="{{ $kontak->link_peta ?? '' }}" 
-                   class="w-full border border-gray-300 rounded-lg px-4 py-2" 
-                   placeholder="https://www.google.com/maps/embed?pb=...">
-            <p class="text-xs text-gray-400 mt-1">Masukkan link embed dari Google Maps</p>
+            <textarea name="link_peta" rows="2" class="w-full border border-gray-300 rounded-lg px-4 py-2" 
+                    placeholder="https://www.google.com/maps/embed?pb=...">{{ $kontak->link_peta ?? '' }}</textarea>
+            <p class="text-xs text-gray-400 mt-1">Masukkan link embed dari Google Maps (tanpa tanda kutip)</p>
         </div>
 
         <button type="submit" class="bg-green-700 text-white px-6 py-2 rounded-lg hover:bg-green-800">
