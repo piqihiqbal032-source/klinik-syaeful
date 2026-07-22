@@ -62,14 +62,14 @@ class JadwalController extends Controller
 
     public function update(Request $request, $id)
     {
-        $jadwal = JadwalDokter::findOrFail($id);
-
         $request->validate([
             'nama_dokter' => 'required|max:100',
             'hari' => 'required|array',
             'jam_mulai' => 'required',
             'jam_selesai' => 'required|after:jam_mulai',
         ]);
+
+        $jadwal = JadwalDokter::findOrFail($id);
 
         $hari = [
             'senin' => 'libur',
@@ -97,9 +97,13 @@ class JadwalController extends Controller
         return redirect()->route('admin.jadwal.index')->with('success', 'Jadwal berhasil diperbarui!');
     }
 
-    // ============================================================
-    // 🔥 TAMBAH LIBUR KHUSUS
-    // ============================================================
+    public function destroy($id)
+    {
+        JadwalDokter::findOrFail($id)->delete();
+        return redirect()->route('admin.jadwal.index')->with('success', 'Jadwal berhasil dihapus!');
+    }
+
+    // TAMBAH LIBUR KHUSUS
     public function addLibur(Request $request, $id)
     {
         $request->validate([
@@ -121,23 +125,12 @@ class JadwalController extends Controller
         ]);
     }
 
-    // ============================================================
-    // 🔥 HAPUS LIBUR KHUSUS
-    // ============================================================
+    // HAPUS LIBUR KHUSUS
     public function deleteLibur($id)
     {
         $libur = \App\Models\PengumumanLibur::findOrFail($id);
         $libur->delete();
 
         return response()->json(['success' => true]);
-    }
-
-    // ============================================================
-    // 🔥 HAPUS JADWAL
-    // ============================================================
-    public function destroy($id)
-    {
-        JadwalDokter::findOrFail($id)->delete();
-        return redirect()->route('admin.jadwal.index')->with('success', 'Jadwal berhasil dihapus!');
     }
 }
