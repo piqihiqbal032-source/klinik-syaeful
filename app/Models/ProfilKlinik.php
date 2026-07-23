@@ -18,4 +18,8 @@ class ProfilKlinik extends Model
         'misi',
         'struktur_organisasi'
     ];
+// Otomatis ubah JSON ke Array dan sebaliknya
+    protected $casts = [
+        'struktur_organisasi' => 'array',
+    ];
 }

@@ -14,7 +14,7 @@ class ProfilController extends Controller
         return view('admin.profil.index', compact('profil'));
     }
 
-   public function update(Request $request, $id)
+    public function update(Request $request, $id)
     {
         $request->validate([
             'sejarah_singkat' => 'required',
@@ -25,14 +25,27 @@ class ProfilController extends Controller
             'struktur_organisasi' => 'nullable',
         ]);
 
-        $profil = ProfilKlinik::find($id);
+        $profil = ProfilKlinik::findOrFail($id);
 
         $profil->sejarah_singkat = $request->sejarah_singkat;
         $profil->moto = $request->moto;             
         $profil->tujuan = $request->tujuan;         
         $profil->visi = $request->visi;
         $profil->misi = $request->misi;
-        $profil->struktur_organisasi = $request->struktur_organisasi;
+
+        // Jika struktur_organisasi berupa Array (dari form input dinamis)
+        if (is_array($request->struktur_organisasi)) {
+            // Filter agar baris input yang kosong tidak ikut tersimpan
+            $strukturFiltered = array_filter($request->struktur_organisasi, function ($item) {
+                return !is_null($item) && trim($item) !== '';
+            });
+            // Ubah array menjadi format JSON string agar bisa disimpan di database
+            $profil->struktur_organisasi = json_encode(array_values($strukturFiltered));
+        } else {
+            // Jika dikirim sebagai string biasa
+            $profil->struktur_organisasi = $request->struktur_organisasi;
+        }
+
         $profil->save();
 
         return redirect()->route('admin.profil')->with('success', 'Profil berhasil diperbarui!');
