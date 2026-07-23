@@ -43,7 +43,7 @@
                 @foreach($days as $key => $label)
                     <label class="flex items-center space-x-2 p-2 border rounded hover:bg-gray-50">
                         <input type="checkbox" name="hari[]" value="{{ $key }}" 
-                            {{ isset($hariData[$key]) && $hariData[$key] == 'aktif' ? 'checked' : '' }}
+                            {{ isset($jadwal->hari_praktik[$key]) && $jadwal->hari_praktik[$key] == 'aktif' ? 'checked' : '' }}
                             class="rounded border-gray-300 text-green-600">
                         <span>{{ $label }}</span>
                     </label>

@@ -10,7 +10,7 @@ class JadwalController extends Controller
 {
     public function index()
     {
-        $jadwal = JadwalDokter::all();
+        $jadwal = JadwalDokter::with('pengumumanLibur')->get(); 
         return view('admin.jadwal.index', compact('jadwal'));
     }
 
@@ -23,7 +23,7 @@ class JadwalController extends Controller
     {
         $request->validate([
             'nama_dokter' => 'required|max:100',
-            'hari' => 'required|array',
+            'hari' => 'nullable|array', 
             'jam_mulai' => 'required',
             'jam_selesai' => 'required|after:jam_mulai',
         ]);
@@ -38,9 +38,11 @@ class JadwalController extends Controller
             'minggu' => 'libur'
         ];
 
-        foreach ($request->hari as $h) {
-            if (array_key_exists($h, $hari)) {
-                $hari[$h] = 'aktif';
+        if ($request->has('hari') && is_array($request->hari)) {
+            foreach ($request->hari as $h) {
+                if (array_key_exists($h, $hari)) {
+                    $hari[$h] = 'aktif';
+                }
             }
         }
 
@@ -64,7 +66,7 @@ class JadwalController extends Controller
     {
         $request->validate([
             'nama_dokter' => 'required|max:100',
-            'hari' => 'required|array',
+            'hari' => 'nullable|array', 
             'jam_mulai' => 'required',
             'jam_selesai' => 'required|after:jam_mulai',
         ]);
@@ -81,9 +83,11 @@ class JadwalController extends Controller
             'minggu' => 'libur'
         ];
 
-        foreach ($request->hari as $h) {
-            if (array_key_exists($h, $hari)) {
-                $hari[$h] = 'aktif';
+        if ($request->has('hari') && is_array($request->hari)) {
+            foreach ($request->hari as $h) {
+                if (array_key_exists($h, $hari)) {
+                    $hari[$h] = 'aktif';
+                }
             }
         }
 

@@ -30,10 +30,12 @@
                 @endphp
                 @foreach($days as $key => $label)
                     <label class="flex items-center space-x-2 p-2 border rounded hover:bg-gray-50">
-                        <input type="checkbox" name="hari[]" value="{{ $key }}" class="rounded border-gray-300 text-green-600">
+                        <input type="checkbox" name="hari[]" value="{{ $key }}" 
+                            {{ is_array(old('hari')) && in_array($key, old('hari')) ? 'checked' : '' }}
+                            class="rounded border-gray-300 text-green-600">
                         <span>{{ $label }}</span>
                     </label>
-                @endforeach
+                                    @endforeach
             </div>
             <p class="text-xs text-gray-400 mt-1">Centang hari praktik dokter</p>
         </div>
