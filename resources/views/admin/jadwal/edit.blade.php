@@ -64,7 +64,22 @@
                        class="w-full border border-gray-300 rounded-lg px-4 py-2" required>
             </div>
         </div>
+        <!-- Tambahan Kolom Status -->
+        <div class="mb-4">
+            <label class="block text-gray-700 font-semibold mb-2">Status Praktik Dokter</label>
+            <select name="status" class="w-full border border-gray-300 rounded-lg px-4 py-2">
+                <option value="aktif">🟢 Aktif (Praktik Sesuai Jadwal)</option>
+                <option value="libur">🔴 Libur / Cuti</option>
+                <option value="kendala">🟡 Ada Kendala / Pasien Gawat Darurat</option>
+            </select>
+        </div>
 
+        <!-- Tambahan Kolom Catatan Kendala -->
+        <div class="mb-4">
+            <label class="block text-gray-700 font-semibold mb-2">Catatan Khusus / Pemberitahuan Kendala</label>
+            <textarea name="catatan" rows="3" class="w-full border border-gray-300 rounded-lg px-4 py-2" placeholder="Contoh: Dokter terlambat hadir karena ada penanganan pasien gawat di RS lain."></textarea>
+            <p class="text-xs text-gray-500 mt-1">Catatan ini akan langsung ditampilkan di kotak kuning halaman detail jadwal publik.</p>
+        </div>
         <button type="submit" class="bg-green-700 text-white px-6 py-2 rounded-lg hover:bg-green-800">
             Simpan
         </button>
