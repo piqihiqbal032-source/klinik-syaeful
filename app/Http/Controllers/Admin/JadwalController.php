@@ -10,7 +10,13 @@ class JadwalController extends Controller
 {
     public function index()
     {
-        $jadwal = JadwalDokter::with('pengumumanLibur')->get(); 
+        // Menggunakan try-catch/fallback agar tidak crash jika relasi belum siap
+        try {
+            $jadwal = JadwalDokter::with('pengumumanLibur')->get();
+        } catch (\Exception $e) {
+            $jadwal = JadwalDokter::all();
+        }
+
         return view('admin.jadwal.index', compact('jadwal'));
     }
 
@@ -26,6 +32,8 @@ class JadwalController extends Controller
             'hari' => 'nullable|array', 
             'jam_mulai' => 'required',
             'jam_selesai' => 'required|after:jam_mulai',
+            'status' => 'nullable|string',
+            'catatan' => 'nullable|string',
         ]);
 
         $hari = [
@@ -46,11 +54,14 @@ class JadwalController extends Controller
             }
         }
 
+        // TAMBAHKAN status & catatan ke array penciptaan
         JadwalDokter::create([
             'nama_dokter' => $request->nama_dokter,
             'hari_praktik' => $hari,
             'jam_mulai' => $request->jam_mulai,
             'jam_selesai' => $request->jam_selesai,
+            'status' => $request->status ?? 'aktif',
+            'catatan' => $request->catatan,
         ]);
 
         return redirect()->route('admin.jadwal.index')->with('success', 'Jadwal berhasil ditambahkan!');
@@ -69,6 +80,8 @@ class JadwalController extends Controller
             'hari' => 'nullable|array', 
             'jam_mulai' => 'required',
             'jam_selesai' => 'required|after:jam_mulai',
+            'status' => 'nullable|string',
+            'catatan' => 'nullable|string',
         ]);
 
         $jadwal = JadwalDokter::findOrFail($id);
@@ -91,11 +104,14 @@ class JadwalController extends Controller
             }
         }
 
+        // TAMBAHKAN status & catatan ke array update
         $jadwal->update([
             'nama_dokter' => $request->nama_dokter,
             'hari_praktik' => $hari,
             'jam_mulai' => $request->jam_mulai,
             'jam_selesai' => $request->jam_selesai,
+            'status' => $request->status ?? 'aktif',
+            'catatan' => $request->catatan,
         ]);
 
         return redirect()->route('admin.jadwal.index')->with('success', 'Jadwal berhasil diperbarui!');
