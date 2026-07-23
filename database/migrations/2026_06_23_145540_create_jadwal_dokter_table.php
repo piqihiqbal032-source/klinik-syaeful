@@ -14,6 +14,8 @@ return new class extends Migration
             $table->json('hari_praktik');
             $table->time('jam_mulai');
             $table->time('jam_selesai');
+            $table->enum('status', ['aktif', 'libur', 'kendala'])->default('aktif');
+            $table->text('catatan')->nullable()
             $table->timestamps();
         });
     }

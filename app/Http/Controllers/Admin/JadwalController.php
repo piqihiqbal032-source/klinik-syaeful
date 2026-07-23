@@ -10,12 +10,8 @@ class JadwalController extends Controller
 {
     public function index()
     {
-        // Menggunakan try-catch/fallback agar tidak crash jika relasi belum siap
-        try {
-            $jadwal = JadwalDokter::with('pengumumanLibur')->get();
-        } catch (\Exception $e) {
-            $jadwal = JadwalDokter::all();
-        }
+        // Cukup ambil semua data jadwal tanpa perlu relasi libur
+        $jadwal = JadwalDokter::all();
 
         return view('admin.jadwal.index', compact('jadwal'));
     }
