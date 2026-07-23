@@ -14,15 +14,24 @@ class ProfilController extends Controller
         return view('admin.profil.index', compact('profil'));
     }
 
-    public function update(Request $request, $id)
+   public function update(Request $request, $id)
     {
+        // Ubah validator menjadi 'required' agar sistem menolak jika ada yang kosong
         $request->validate([
-            'sejarah_singkat' => 'required',
-            'moto' => 'nullable',          
-            'tujuan' => 'nullable',         
-            'visi' => 'nullable',
-            'misi' => 'nullable',
-            'struktur_organisasi' => 'nullable',
+            'sejarah_singkat'     => 'required',
+            'moto'                => 'required',          
+            'tujuan'              => 'required',         
+            'visi'                => 'required',
+            'misi'                => 'required',
+            'struktur_organisasi' => 'required',
+        ], [
+            // Pesan peringatan kustom dalam bahasa Indonesia
+            'sejarah_singkat.required'     => 'Sejarah singkat wajib diisi!',
+            'moto.required'                => 'Moto klinik wajib diisi!',
+            'tujuan.required'              => 'Tujuan klinik wajib diisi!',
+            'visi.required'                => 'Visi wajib diisi!',
+            'misi.required'                => 'Misi wajib diisi!',
+            'struktur_organisasi.required' => 'Struktur organisasi wajib diisi!',
         ]);
 
         $profil = ProfilKlinik::findOrFail($id);
@@ -33,16 +42,12 @@ class ProfilController extends Controller
         $profil->visi = $request->visi;
         $profil->misi = $request->misi;
 
-        // Jika struktur_organisasi berupa Array (dari form input dinamis)
         if (is_array($request->struktur_organisasi)) {
-            // Filter agar baris input yang kosong tidak ikut tersimpan
             $strukturFiltered = array_filter($request->struktur_organisasi, function ($item) {
                 return !is_null($item) && trim($item) !== '';
             });
-            // Ubah array menjadi format JSON string agar bisa disimpan di database
             $profil->struktur_organisasi = json_encode(array_values($strukturFiltered));
         } else {
-            // Jika dikirim sebagai string biasa
             $profil->struktur_organisasi = $request->struktur_organisasi;
         }
 
