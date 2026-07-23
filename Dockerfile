@@ -33,7 +33,7 @@ RUN php artisan config:clear
 RUN php artisan config:clear
 RUN php artisan cache:clear || true
 RUN echo "=== Testing Database Connection ==="
-RUN php artisan tinker --execute="try { DB::connection()->getPdo(); echo 'Connected!'; } catch(Exception $e) { echo 'Error: '.$e->getMessage(); }" || true
+RUN php -r "try { require 'vendor/autoload.php'; \$app = require_once 'bootstrap/app.php'; \$kernel = \$app->make(Illuminate\Contracts\Console\Kernel::class); \$kernel->bootstrap(); DB::connection()->getPdo(); echo 'DB Connected!'; } catch (\Throwable \$e) { echo 'DB Error: ' . \$e->getMessage(); }" || true
 RUN echo "=== Environment Variables ==="
 RUN echo "DB_CONNECTION: $(grep DB_CONNECTION .env || echo 'NOT FOUND')"
 RUN echo "DB_HOST: $(grep DB_HOST .env || echo 'NOT FOUND')"
