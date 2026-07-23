@@ -79,10 +79,12 @@
                     </div>
                 @endif
             </div>
-
-            <button type="button" id="add-struktur-btn" class="bg-emerald-600 text-white px-4 py-2 rounded-lg hover:bg-emerald-700 font-semibold text-sm">
-                + Tambah Baris
-            </button>
+            <!-- tombol tambah baris-->
+            <div style="margin-top: 10px; margin-bottom: 20px;">
+                <button type="button" id="add-struktur-btn" style="background-color: #10b981; color: #ffffff; padding: 10px 18px; border: none; border-radius: 6px; font-weight: bold; font-size: 14px; cursor: pointer; display: inline-block;">
+                    + Tambah Baris
+                </button>
+            </div>
         </div>
 
         <!-- TOMBOL SIMPAN HARUS BERADA DI DALAM TAG FORM -->
