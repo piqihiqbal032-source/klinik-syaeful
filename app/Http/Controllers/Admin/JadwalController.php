@@ -79,8 +79,9 @@ class JadwalController extends Controller
     /**
      * Update data jadwal dokter (Mencegah Error 500)
      */
-    public function update(Request $request, $id)
+   public function update(Request $request, $id)
     {
+        // 1. Validasi Input
         $request->validate([
             'nama_dokter'  => 'required|string|max:100',
             'hari_praktik' => 'required|array',
@@ -89,8 +90,12 @@ class JadwalController extends Controller
             'catatan'      => 'nullable|string',
         ]);
 
-        $jadwal = JadwalDokter::findOrFail($id);
+        // 2. Pencarian ID yang Fleksibel (Mencegah ModelNotFoundException)
+        $jadwal = JadwalDokter::where('id', $id)
+                    ->orWhere('id_jadwal', $id)
+                    ->firstOrFail();
 
+        // 3. Susun Ulang Format Hari
         $hariUpdated = [
             'senin'  => 'libur',
             'selasa' => 'libur',
@@ -109,12 +114,13 @@ class JadwalController extends Controller
             }
         }
 
-        // Simpan perubahan data saja
+        // 4. Assign & Save
         $jadwal->nama_dokter  = $request->nama_dokter;
         $jadwal->hari_praktik = $hariUpdated;
         $jadwal->jam_mulai    = $request->jam_mulai;
         $jadwal->jam_selesai  = $request->jam_selesai;
         $jadwal->catatan      = $request->catatan;
+        
         $jadwal->save();
 
         return redirect()->route('admin.jadwal.index')->with('success', 'Jadwal dokter berhasil diperbarui!');
