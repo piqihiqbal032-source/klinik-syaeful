@@ -17,7 +17,7 @@ class AdminController extends Controller
     {
         // Masukkan email kamu yang sedang dipakai login saat ini
         $allowedEmails = [
-            'email_kamu_yang_login_sekarang@gmail.com', // Ganti dengan emailmu
+            'admin@klinik.com', // Ganti dengan emailmu
         ];
 
         // Mengizinkan jika is_master true ATAU emailnya terdaftar di daftar di atas
