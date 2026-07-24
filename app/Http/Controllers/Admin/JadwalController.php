@@ -81,30 +81,45 @@ class JadwalController extends Controller
      */
   public function update(Request $request, $id)
     {
-        // Bungkus proses update dengan Try-Catch untuk memanggil pesan error asli
-        try {
-            $jadwal = JadwalDokter::where('id', $id)
-                        ->orWhere('id_jadwal', $id)
-                        ->firstOrFail();
+        $request->validate([
+            'nama_dokter'  => 'required|string|max:100',
+            'hari_praktik' => 'required|array',
+            'jam_mulai'    => 'required',
+            'jam_selesai'  => 'required',
+            'catatan'      => 'nullable|string',
+        ]);
 
-            $jadwal->nama_dokter  = $request->nama_dokter;
-            $jadwal->hari_praktik = $request->hari_praktik;
-            $jadwal->jam_mulai    = $request->jam_mulai;
-            $jadwal->jam_selesai  = $request->jam_selesai;
-            $jadwal->catatan      = $request->catatan;
-            
-            $jadwal->save();
+        // Cari berdasarkan primary key 'id_jadwal'
+        $jadwal = JadwalDokter::findOrFail($id);
 
-            return redirect()->route('admin.jadwal.index')->with('success', 'Berhasil!');
+        // Susun format status hari
+        $hariUpdated = [
+            'senin'  => 'libur',
+            'selasa' => 'libur',
+            'rabu'   => 'libur',
+            'kamis'  => 'libur',
+            'jumat'  => 'libur',
+            'sabtu'  => 'libur',
+            'minggu' => 'libur'
+        ];
 
-        } catch (\Throwable $e) {
-            // Hentikan eksekusi dan cetak pesan error secara mentah ke layar
-            dd([
-                'Pesan Error' => $e->getMessage(),
-                'File'        => $e->getFile(),
-                'Baris'       => $e->getLine(),
-            ]);
+        if (is_array($request->hari_praktik)) {
+            foreach ($request->hari_praktik as $dayKey => $statusVal) {
+                if (array_key_exists($dayKey, $hariUpdated)) {
+                    $hariUpdated[$dayKey] = $statusVal;
+                }
+            }
         }
+
+        $jadwal->nama_dokter  = $request->nama_dokter;
+        $jadwal->hari_praktik = $hariUpdated;
+        $jadwal->jam_mulai    = $request->jam_mulai;
+        $jadwal->jam_selesai  = $request->jam_selesai;
+        $jadwal->catatan      = $request->catatan;
+        
+        $jadwal->save();
+
+        return redirect()->route('admin.jadwal.index')->with('success', 'Jadwal dokter berhasil diperbarui!');
     }
 
     /**
