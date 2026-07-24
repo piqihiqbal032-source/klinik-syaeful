@@ -79,47 +79,54 @@ class JadwalController extends Controller
     /**
      * Update data jadwal dokter (Mencegah Error 500)
      */
-  public function update(Request $request, $id)
+    public function update(Request $request, $id)
     {
-        $request->validate([
-            'nama_dokter'  => 'required|string|max:100',
-            'hari_praktik' => 'required|array',
-            'jam_mulai'    => 'required',
-            'jam_selesai'  => 'required',
-            'catatan'      => 'nullable|string',
-        ]);
+        try {
+            $request->validate([
+                'nama_dokter'  => 'required|string|max:100',
+                'hari_praktik' => 'required|array',
+                'jam_mulai'    => 'required',
+                'jam_selesai'  => 'required',
+                'catatan'      => 'nullable|string',
+            ]);
 
-        // Cari berdasarkan primary key 'id_jadwal'
-        $jadwal = JadwalDokter::findOrFail($id);
+            $jadwal = JadwalDokter::findOrFail($id);
 
-        // Susun format status hari
-        $hariUpdated = [
-            'senin'  => 'libur',
-            'selasa' => 'libur',
-            'rabu'   => 'libur',
-            'kamis'  => 'libur',
-            'jumat'  => 'libur',
-            'sabtu'  => 'libur',
-            'minggu' => 'libur'
-        ];
+            $hariUpdated = [
+                'senin'  => 'libur',
+                'selasa' => 'libur',
+                'rabu'   => 'libur',
+                'kamis'  => 'libur',
+                'jumat'  => 'libur',
+                'sabtu'  => 'libur',
+                'minggu' => 'libur'
+            ];
 
-        if (is_array($request->hari_praktik)) {
-            foreach ($request->hari_praktik as $dayKey => $statusVal) {
-                if (array_key_exists($dayKey, $hariUpdated)) {
-                    $hariUpdated[$dayKey] = $statusVal;
+            if (is_array($request->hari_praktik)) {
+                foreach ($request->hari_praktik as $dayKey => $statusVal) {
+                    if (array_key_exists($dayKey, $hariUpdated)) {
+                        $hariUpdated[$dayKey] = $statusVal;
+                    }
                 }
             }
+
+            $jadwal->nama_dokter  = $request->nama_dokter;
+            $jadwal->hari_praktik = $hariUpdated;
+            $jadwal->jam_mulai    = $request->jam_mulai;
+            $jadwal->jam_selesai  = $request->jam_selesai;
+            $jadwal->catatan      = $request->catatan;
+            
+            $jadwal->save();
+
+            return redirect()->route('admin.jadwal.index')->with('success', 'Jadwal dokter berhasil diperbarui!');
+
+        } catch (\Throwable $e) {
+            dd([
+                'Pesan Error' => $e->getMessage(),
+                'File'        => $e->getFile(),
+                'Baris'       => $e->getLine(),
+            ]);
         }
-
-        $jadwal->nama_dokter  = $request->nama_dokter;
-        $jadwal->hari_praktik = $hariUpdated;
-        $jadwal->jam_mulai    = $request->jam_mulai;
-        $jadwal->jam_selesai  = $request->jam_selesai;
-        $jadwal->catatan      = $request->catatan;
-        
-        $jadwal->save();
-
-        return redirect()->route('admin.jadwal.index')->with('success', 'Jadwal dokter berhasil diperbarui!');
     }
 
     /**
