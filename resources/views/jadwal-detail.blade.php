@@ -1,117 +1,105 @@
 @extends('layouts.app')
 
-@section('title', 'Detail Jadwal - ' . $dokter->nama_dokter)
-
 @section('content')
-<section class="py-16 bg-gray-50">
-    <div class="container mx-auto px-4 max-w-4xl">
+<div class="max-w-4xl mx-auto py-8 px-4">
+    <div class="bg-white rounded-xl shadow-md p-6 border border-gray-100">
         
-        <!-- Tombol Kembali -->
-        <a href="{{ route('jadwal') }}" class="inline-flex items-center text-[#10453f] hover:underline mb-6 font-medium">
-            <i class="fas fa-arrow-left mr-2"></i> Kembali ke Daftar Dokter
-        </a>
+        <!-- NAMA DOKTER -->
+        <h2 class="text-2xl font-bold text-gray-800 mb-1">
+            {{ $dokter->nama_dokter ?? $jadwal->nama_dokter }}
+        </h2>
+        <p class="text-sm text-gray-500 mb-6">Jadwal Praktik Mingguan</p>
 
-        <!-- Card Detail -->
-        <div class="bg-white rounded-xl shadow-lg p-8">
-            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
-                <div class="flex items-center gap-4">
-                    <div class="w-16 h-16 bg-[#10453f]/10 rounded-full flex items-center justify-center">
-                        <i class="fas fa-user-md text-[#10453f] text-3xl"></i>
-                    </div>
-                    <div>
-                        <h1 class="text-3xl font-bold text-[#10453f]">{{ $dokter->nama_dokter }}</h1>
-                        <p class="text-gray-500">Jadwal Praktik</p>
-                    </div>
-                </div>
+        @php
+            $days = [
+                'senin'  => 'Senin',
+                'selasa' => 'Selasa',
+                'rabu'   => 'Rabu',
+                'kamis'  => 'Kamis',
+                'jumat'  => 'Jumat',
+                'sabtu'  => 'Sabtu',
+                'minggu' => 'Minggu'
+            ];
 
-                <!-- INDIKATOR STATUS UTAMA DOKTER (AKSI DARI EDIT ADMIN) -->
-                <div>
-                    @if(($dokter->status ?? 'aktif') == 'aktif')
-                        <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold bg-green-100 text-green-800 border border-green-300">
-                            🟢 Dokter Aktif Praktik
-                        </span>
-                    @elseif(($dokter->status ?? '') == 'libur')
-                        <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold bg-red-100 text-red-800 border border-red-300">
-                            🔴 Dokter Sedang Libur / Cuti
-                        </span>
-                    @else
-                        <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold bg-yellow-100 text-yellow-800 border border-yellow-300">
-                            🟡 Ada Kendala / Perubahan Jadwal
-                        </span>
-                    @endif
-                </div>
-            </div>
+            $dataJadwal = $dokter ?? $jadwal;
+            $hariData = $dataJadwal->hari_praktik ?? [];
 
-            <div class="w-full h-1 bg-[#10453f]/20 mb-6 rounded-full"></div>
+            // Jika format tersimpan sebagai JSON string
+            if (is_string($hariData)) {
+                $hariData = json_decode($hariData, true) ?? [];
+            }
+        @endphp
 
-            <!-- Tabel Jadwal Hari -->
-            <div class="overflow-x-auto">
-                <table class="w-full">
-                    <thead class="bg-[#10453f] text-white">
-                        <tr>
-                            <th class="px-4 py-3 text-left text-sm">Hari</th>
-                            <th class="px-4 py-3 text-left text-sm">Jam Mulai</th>
-                            <th class="px-4 py-3 text-left text-sm">Jam Selesai</th>
-                            <th class="px-4 py-3 text-left text-sm">Status Hari</th>
-                        </tr>
-                    </thead>
-                    <tbody>
+        <!-- TABEL JADWAL HARI & STATUS -->
+        <div class="overflow-x-auto rounded-lg border border-gray-200 mb-6">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="bg-green-800 text-white text-sm">
+                        <th class="p-3">Hari</th>
+                        <th class="p-3">Jam Mulai</th>
+                        <th class="p-3">Jam Selesai</th>
+                        <th class="p-3">Status Kehadiran</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-100 text-sm">
+                    @foreach($days as $key => $label)
                         @php
-                            $hariList = ['senin' => 'Senin', 'selasa' => 'Selasa', 'rabu' => 'Rabu', 
-                                          'kamis' => 'Kamis', 'jumat' => 'Jumat', 'sabtu' => 'Sabtu', 
-                                          'minggu' => 'Minggu'];
-                            $hariData = $dokter->hari_praktik ?? [];
-
-                            // Jika $hariData tersimpan dalam JSON String
-                            if(is_string($hariData)){
-                                $hariData = json_decode($hariData, true) ?? [];
+                            $st = $hariData[$key] ?? 'libur';
+                            // Compatibility dengan boolean/1
+                            if ($st === true || $st === '1') { 
+                                $st = 'aktif'; 
                             }
                         @endphp
-
-                        @foreach($hariList as $key => $label)
-                        <tr class="border-b hover:bg-gray-50">
-                            <td class="px-4 py-3 text-sm font-medium">{{ $label }}</td>
+                        <tr class="hover:bg-gray-50">
+                            <td class="p-3 font-medium text-gray-700">{{ $label }}</td>
                             
-                            {{-- Cek apakah hari ini dokter jadwalnya aktif & status dokter tidak libur total --}}
-                            @if(isset($hariData[$key]) && ($hariData[$key] == 'aktif' || $hariData[$key] == '1' || $hariData[$key] === true))
-                                <td class="px-4 py-3 text-sm">{{ $dokter->jam_mulai }}</td>
-                                <td class="px-4 py-3 text-sm">{{ $dokter->jam_selesai }}</td>
-                                <td class="px-4 py-3 text-sm">
-                                    <span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-700">
+                            @if($st == 'aktif')
+                                <td class="p-3 text-gray-600">{{ $dataJadwal->jam_mulai }}</td>
+                                <td class="p-3 text-gray-600">{{ $dataJadwal->jam_selesai }}</td>
+                                <td class="p-3">
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-green-100 text-green-800">
                                         🟢 Aktif
                                     </span>
                                 </td>
+                            @elseif($st == 'cuti')
+                                <td class="p-3 text-gray-400">-</td>
+                                <td class="p-3 text-gray-400">-</td>
+                                <td class="p-3">
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-yellow-100 text-yellow-800">
+                                        🟡 Cuti
+                                    </span>
+                                </td>
                             @else
-                                <td class="px-4 py-3 text-sm text-gray-400">-</td>
-                                <td class="px-4 py-3 text-sm text-gray-400">-</td>
-                                <td class="px-4 py-3 text-sm">
-                                    <span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-gray-100 text-gray-400">
-                                        ⚪ Libur
+                                <td class="p-3 text-gray-400">-</td>
+                                <td class="p-3 text-gray-400">-</td>
+                                <td class="p-3">
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-red-100 text-red-800">
+                                        🔴 Libur
                                     </span>
                                 </td>
                             @endif
                         </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
-
-            <!-- KOTAK CATATAN KENDALA / PEMBERITAHUAN KHUSUS -->
-            <div class="mt-6 p-4 bg-yellow-50 rounded-lg border border-yellow-200 flex items-start space-x-3">
-                <i class="fas fa-info-circle text-yellow-600 text-lg mt-0.5"></i>
-                <div>
-                    @if(!empty($dokter->catatan))
-                        <p class="text-sm font-bold text-yellow-800">Catatan / Pemberitahuan Klinik:</p>
-                        <p class="text-sm text-yellow-800 mt-1">{{ $dokter->catatan }}</p>
-                    @else
-                        <p class="text-sm text-yellow-700">
-                            Jadwal dapat berubah, hubungi klinik untuk konfirmasi.
-                        </p>
-                    @endif
-                </div>
-            </div>
-
+                    @endforeach
+                </tbody>
+            </table>
         </div>
+
+        <!-- KOTAK CATATAN KHUSUS / PEMBERITAHUAN -->
+        <div class="p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+            @if(!empty($dataJadwal->catatan))
+                <p class="font-bold text-yellow-800 text-xs uppercase tracking-wide mb-1">📢 Pemberitahuan Klinik / Informasi Cuti:</p>
+                <p class="text-yellow-900 text-sm font-medium">{{ $dataJadwal->catatan }}</p>
+            @else
+                <p class="text-yellow-700 text-sm">ℹ️ Jadwal sewaktu-waktu dapat berubah, silakan hubungi kontak klinik untuk konfirmasi.</p>
+            @endif
+        </div>
+
+        <div class="mt-6">
+            <a href="{{ url()->previous() }}" class="text-sm font-medium text-green-700 hover:underline">
+                &larr; Kembali ke daftar jadwal
+            </a>
+        </div>
+
     </div>
-</section>
+</div>
 @endsection

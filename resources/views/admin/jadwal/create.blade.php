@@ -6,7 +6,7 @@
 
     @if ($errors->any())
         <div class="bg-red-100 text-red-700 px-4 py-2 rounded mb-4 border border-red-300">
-            <strong class="font-bold">Gagal Menyimpan Data!</strong>
+            <strong class="font-bold">Gagal Menyimpan!</strong>
             <ul class="list-disc pl-5 mt-1">
                 @foreach ($errors->all() as $error)
                     <li>{{ $error }}</li>
@@ -21,60 +21,64 @@
         <!-- NAMA DOKTER -->
         <div class="mb-4">
             <label class="block text-gray-700 font-semibold mb-2">Nama Dokter</label>
-            <input type="text" name="nama_dokter" value="{{ old('nama_dokter') }}" class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-green-500" placeholder="dr. Ahmad Farid, Sp.PD" required>
+            <input type="text" name="nama_dokter" value="{{ old('nama_dokter') }}" 
+                   class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-green-500" placeholder="dr. Nama Dokter, Sp.X" required>
         </div>
 
-        <!-- HARI PRAKTIK -->
+        <!-- STATUS HARI PRAKTIK -->
         <div class="mb-4">
-            <label class="block text-gray-700 font-semibold mb-2">Hari Praktik</label>
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-2">
-                @php
-                    $days = ['senin' => 'Senin', 'selasa' => 'Selasa', 'rabu' => 'Rabu', 'kamis' => 'Kamis', 'jumat' => 'Jumat', 'sabtu' => 'Sabtu', 'minggu' => 'Minggu'];
-                @endphp
+            <label class="block text-gray-700 font-semibold mb-2">Status Hari Praktik Dokter</label>
+            <p class="text-xs text-gray-500 mb-3">Tentukan status awal kehadiran dokter pada setiap hari.</p>
+            
+            @php
+                $days = [
+                    'senin'  => 'Senin',
+                    'selasa' => 'Selasa',
+                    'rabu'   => 'Rabu',
+                    'kamis'  => 'Kamis',
+                    'jumat'  => 'Jumat',
+                    'sabtu'  => 'Sabtu',
+                    'minggu' => 'Minggu'
+                ];
+            @endphp
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
                 @foreach($days as $key => $label)
-                    <label class="flex items-center space-x-2 p-2 border rounded hover:bg-gray-50 cursor-pointer">
-                        <input type="checkbox" name="hari[]" value="{{ $key }}" 
-                            {{ is_array(old('hari')) && in_array($key, old('hari')) ? 'checked' : '' }}
-                            class="rounded border-gray-300 text-green-600 focus:ring-green-500">
-                        <span>{{ $label }}</span>
-                    </label>
+                    <div class="flex items-center justify-between p-3 border rounded-lg bg-gray-50">
+                        <span class="font-medium text-gray-700">{{ $label }}</span>
+                        <select name="hari_praktik[{{ $key }}]" class="border border-gray-300 rounded px-2 py-1 text-sm focus:ring-green-500">
+                            <option value="aktif">🟢 Aktif</option>
+                            <option value="libur" {{ in_array($key, ['sabtu', 'minggu']) ? 'selected' : '' }}>🔴 Libur</option>
+                            <option value="cuti">🟡 Cuti</option>
+                        </select>
+                    </div>
                 @endforeach
             </div>
-            <p class="text-xs text-gray-400 mt-1">Centang hari praktik rutin dokter</p>
         </div>
 
         <!-- JAM PRAKTIK -->
         <div class="grid grid-cols-2 gap-4 mb-4">
             <div>
                 <label class="block text-gray-700 font-semibold mb-2">Jam Mulai</label>
-                <input type="time" name="jam_mulai" value="{{ old('jam_mulai') }}" class="w-full border border-gray-300 rounded-lg px-4 py-2" required>
+                <input type="time" name="jam_mulai" value="{{ old('jam_mulai', '08:00') }}" 
+                       class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-green-500" required>
             </div>
             <div>
                 <label class="block text-gray-700 font-semibold mb-2">Jam Selesai</label>
-                <input type="time" name="jam_selesai" value="{{ old('jam_selesai') }}" class="w-full border border-gray-300 rounded-lg px-4 py-2" required>
+                <input type="time" name="jam_selesai" value="{{ old('jam_selesai', '12:00') }}" 
+                       class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-green-500" required>
             </div>
         </div>
 
-        <!-- TAMBAHAN 1: STATUS DOKTER -->
-        <div class="mb-4">
-            <label class="block text-gray-700 font-semibold mb-2">Status Praktik Dokter</label>
-            <select name="status" class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-green-500" required>
-                <option value="aktif" {{ old('status') == 'aktif' ? 'selected' : '' }}>🟢 Aktif (Praktik Normal)</option>
-                <option value="libur" {{ old('status') == 'libur' ? 'selected' : '' }}>🔴 Libur / Cuti</option>
-                <option value="kendala" {{ old('status') == 'kendala' ? 'selected' : '' }}>🟡 Ada Kendala / Perubahan Jam</option>
-            </select>
-        </div>
-
-        <!-- TAMBAHAN 2: CATATAN KENDALA -->
+        <!-- CATATAN KHUSUS -->
         <div class="mb-6">
-            <label class="block text-gray-700 font-semibold mb-2">Catatan / Pemberitahuan Khusus (Opsional)</label>
-            <textarea name="catatan" rows="3" class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-green-500" placeholder="Contoh: Dokter terlambat hadir karena ada penanganan pasien gawat di RS lain.">{{ old('catatan') }}</textarea>
-            <p class="text-xs text-gray-400 mt-1">Catatan ini akan tampil di bagian bawah halaman detail jadwal publik.</p>
+            <label class="block text-gray-700 font-semibold mb-2">Catatan Khusus / Pemberitahuan Kendala</label>
+            <textarea name="catatan" rows="3" class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-green-500" placeholder="Contoh: Dokter terlambat hadir pada hari Senin.">{{ old('catatan') }}</textarea>
         </div>
 
         <!-- BUTTONS -->
         <button type="submit" class="bg-green-700 text-white px-6 py-2 rounded-lg hover:bg-green-800 font-semibold">
-            Simpan
+            Simpan Jadwal
         </button>
         <a href="{{ route('admin.jadwal.index') }}" class="bg-gray-500 text-white px-6 py-2 rounded-lg hover:bg-gray-600 ml-2">Batal</a>
     </form>

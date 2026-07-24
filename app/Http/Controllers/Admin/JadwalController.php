@@ -8,30 +8,32 @@ use Illuminate\Http\Request;
 
 class JadwalController extends Controller
 {
+    // Menampilkan daftar jadwal di admin
     public function index()
     {
         $jadwal = JadwalDokter::all();
         return view('admin.jadwal.index', compact('jadwal'));
     }
 
+    // Menampilkan form tambah
     public function create()
     {
         return view('admin.jadwal.create');
     }
 
+    // Menyimpan data jadwal baru
     public function store(Request $request)
     {
         $request->validate([
-            'nama_dokter'  => 'required|max:100',
-            'hari_praktik' => 'nullable|array', // Disesuaikan dengan name="hari_praktik" di Blade
+            'nama_dokter'  => 'required|string|max:100',
+            'hari_praktik' => 'required|array',
             'jam_mulai'    => 'required',
             'jam_selesai'  => 'required',
-            'status'       => 'nullable|string',
             'catatan'      => 'nullable|string',
         ]);
 
-        // Default susunan hari
-        $hari = [
+        // Default status per hari
+        $hariDefault = [
             'senin'  => 'libur',
             'selasa' => 'libur',
             'rabu'   => 'libur',
@@ -41,55 +43,46 @@ class JadwalController extends Controller
             'minggu' => 'libur'
         ];
 
-        // Jika dikirim dari form checkbox biasa (Array sederhana: ['senin', 'selasa'])
-        if ($request->has('hari_praktik') && is_array($request->hari_praktik)) {
-            foreach ($request->hari_praktik as $key => $val) {
-                if (is_numeric($key)) {
-                    // Jika dikirim dari checkbox biasa (value 'senin', 'selasa')
-                    if (array_key_exists($val, $hari)) {
-                        $hari[$val] = 'aktif';
-                    }
-                } else {
-                    // Jika dikirim dari select dropdown per hari ('senin' => 'aktif')
-                    if (array_key_exists($key, $hari)) {
-                        $hari[$key] = $val;
-                    }
+        if (is_array($request->hari_praktik)) {
+            foreach ($request->hari_praktik as $dayKey => $statusVal) {
+                if (array_key_exists($dayKey, $hariDefault)) {
+                    $hariDefault[$dayKey] = $statusVal; // Menyimpan: 'aktif', 'libur', atau 'cuti'
                 }
             }
         }
 
         JadwalDokter::create([
             'nama_dokter'  => $request->nama_dokter,
-            'hari_praktik' => $hari,
+            'hari_praktik' => $hariDefault,
             'jam_mulai'    => $request->jam_mulai,
             'jam_selesai'  => $request->jam_selesai,
-            'status'       => $request->status ?? 'aktif',
             'catatan'      => $request->catatan,
         ]);
 
-        return redirect()->route('admin.jadwal.index')->with('success', 'Jadwal berhasil ditambahkan!');
+        return redirect()->route('admin.jadwal.index')->with('success', 'Jadwal dokter berhasil ditambahkan!');
     }
 
+    // Menampilkan form edit
     public function edit($id)
     {
         $jadwal = JadwalDokter::findOrFail($id);
         return view('admin.jadwal.edit', compact('jadwal'));
     }
 
+    // Memperbarui data jadwal (Proses Simpan Perubahan)
     public function update(Request $request, $id)
     {
         $request->validate([
-            'nama_dokter'  => 'required|max:100',
-            'hari_praktik' => 'nullable|array', // Disesuaikan dengan name="hari_praktik" di Blade
+            'nama_dokter'  => 'required|string|max:100',
+            'hari_praktik' => 'required|array',
             'jam_mulai'    => 'required',
             'jam_selesai'  => 'required',
-            'status'       => 'nullable|string',
             'catatan'      => 'nullable|string',
         ]);
 
         $jadwal = JadwalDokter::findOrFail($id);
 
-        $hari = [
+        $hariUpdated = [
             'senin'  => 'libur',
             'selasa' => 'libur',
             'rabu'   => 'libur',
@@ -99,67 +92,36 @@ class JadwalController extends Controller
             'minggu' => 'libur'
         ];
 
-        // Membaca input hari_praktik dari form edit
-        if ($request->has('hari_praktik') && is_array($request->hari_praktik)) {
-            foreach ($request->hari_praktik as $key => $val) {
-                if (is_numeric($key)) {
-                    // Berasal dari input checkbox biasa
-                    if (array_key_exists($val, $hari)) {
-                        $hari[$val] = 'aktif';
-                    }
-                } else {
-                    // Berasal dari input dropdown per hari
-                    if (array_key_exists($key, $hari)) {
-                        $hari[$key] = $val;
-                    }
+        if (is_array($request->hari_praktik)) {
+            foreach ($request->hari_praktik as $dayKey => $statusVal) {
+                if (array_key_exists($dayKey, $hariUpdated)) {
+                    $hariUpdated[$dayKey] = $statusVal;
                 }
             }
         }
 
         $jadwal->update([
             'nama_dokter'  => $request->nama_dokter,
-            'hari_praktik' => $hari,
+            'hari_praktik' => $hariUpdated,
             'jam_mulai'    => $request->jam_mulai,
             'jam_selesai'  => $request->jam_selesai,
-            'status'       => $request->status ?? 'aktif',
             'catatan'      => $request->catatan,
         ]);
 
-        return redirect()->route('admin.jadwal.index')->with('success', 'Jadwal berhasil diperbarui!');
+        return redirect()->route('admin.jadwal.index')->with('success', 'Jadwal dokter berhasil diperbarui!');
     }
 
+    // Menghapus data jadwal
     public function destroy($id)
     {
         JadwalDokter::findOrFail($id)->delete();
         return redirect()->route('admin.jadwal.index')->with('success', 'Jadwal berhasil dihapus!');
     }
 
-    public function addLibur(Request $request, $id)
+    // Menampilkan detail publik (ke view jadwal-detail.blade.php)
+    public function showPublicDetail($id)
     {
-        $request->validate([
-            'tanggal'    => 'required|date',
-            'keterangan' => 'nullable|string'
-        ]);
-
-        $libur = \App\Models\PengumumanLibur::create([
-            'dokter_id'  => $id,
-            'tanggal'    => $request->tanggal,
-            'keterangan' => $request->keterangan ?? 'Libur'
-        ]);
-
-        return response()->json([
-            'success'    => true,
-            'id'         => $libur->id,
-            'tanggal'    => date('d/m/Y', strtotime($libur->tanggal)),
-            'keterangan' => $libur->keterangan
-        ]);
-    }
-
-    public function deleteLibur($id)
-    {
-        $libur = \App\Models\PengumumanLibur::findOrFail($id);
-        $libur->delete();
-
-        return response()->json(['success' => true]);
+        $dokter = JadwalDokter::findOrFail($id);
+        return view('jadwal-detail', compact('dokter'));
     }
 }

@@ -32,14 +32,21 @@
                    class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-green-500" required>
         </div>
 
-        <!-- HARI PRAKTIK & STATUS PER HARI -->
+        <!-- STATUS HARI PRAKTIK DOKTER (3 OPSI) -->
         <div class="mb-4">
             <label class="block text-gray-700 font-semibold mb-2">Status Hari Praktik Dokter</label>
-            <p class="text-xs text-gray-500 mb-3">Tentukan hari apa saja dokter AKTIF atau LIBUR.</p>
+            <p class="text-xs text-gray-500 mb-3">Tentukan status kehadiran dokter pada setiap hari (Aktif, Libur, atau Cuti).</p>
             
             @php
-                $days = ['senin' => 'Senin', 'selasa' => 'Selasa', 'rabu' => 'Rabu', 
-                         'kamis' => 'Kamis', 'jumat' => 'Jumat', 'sabtu' => 'Sabtu', 'minggu' => 'Minggu'];
+                $days = [
+                    'senin'  => 'Senin',
+                    'selasa' => 'Selasa',
+                    'rabu'   => 'Rabu',
+                    'kamis'  => 'Kamis',
+                    'jumat'  => 'Jumat',
+                    'sabtu'  => 'Sabtu',
+                    'minggu' => 'Minggu'
+                ];
                 
                 $hariData = $jadwal->hari_praktik ?? [];
                 if (is_string($hariData)) {
@@ -50,62 +57,34 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
                 @foreach($days as $key => $label)
                     @php
-                        // Cek status hari dari data DB lama
-                        $statusHariLama = 'libur';
-                        if (is_array($hariData)) {
-                            if (isset($hariData[$key]) && ($hariData[$key] == 'aktif' || $hariData[$key] == '1' || $hariData[$key] === true)) {
-                                $statusHariLama = 'aktif';
-                            } elseif (in_array($key, $hariData)) {
-                                $statusHariLama = 'aktif';
-                            }
+                        $statusHari = $hariData[$key] ?? 'libur';
+                        if ($statusHari === true || $statusHari === '1') {
+                            $statusHari = 'aktif';
                         }
                     @endphp
-                   <!-- HARI PRAKTIK & STATUS PER HARI -->
-<div class="mb-4">
-    <label class="block text-gray-700 font-semibold mb-2">Status Hari Praktik Dokter</label>
-    <p class="text-xs text-gray-500 mb-3">Tentukan status kehadiran dokter pada setiap hari.</p>
-    
-    @php
-        $days = ['senin' => 'Senin', 'selasa' => 'Selasa', 'rabu' => 'Rabu', 
-                 'kamis' => 'Kamis', 'jumat' => 'Jumat', 'sabtu' => 'Sabtu', 'minggu' => 'Minggu'];
-        
-        $hariData = $jadwal->hari_praktik ?? [];
-        if (is_string($hariData)) {
-            $hariData = json_decode($hariData, true) ?? [];
-        }
-    @endphp
-
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-        @foreach($days as $key => $label)
-            @php
-                $statusHariLama = $hariData[$key] ?? 'libur';
-                if ($statusHariLama === true || $statusHariLama === '1') {
-                    $statusHariLama = 'aktif';
-                }
-            @endphp
-            <div class="flex items-center justify-between p-3 border rounded-lg bg-gray-50">
-                <span class="font-medium text-gray-700">{{ $label }}</span>
-                <select name="hari_praktik[{{ $key }}]" class="border border-gray-300 rounded px-2 py-1 text-sm focus:ring-green-500">
-                    <option value="aktif" {{ $statusHariLama == 'aktif' ? 'selected' : '' }}>🟢 Aktif</option>
-                    <option value="libur" {{ $statusHariLama == 'libur' ? 'selected' : '' }}>🔴 Libur</option>
-                    <option value="cuti" {{ $statusHariLama == 'cuti' ? 'selected' : '' }}>🟡 Cuti / Kendala</option>
-                </select>
+                    <div class="flex items-center justify-between p-3 border rounded-lg bg-gray-50">
+                        <span class="font-medium text-gray-700">{{ $label }}</span>
+                        <select name="hari_praktik[{{ $key }}]" class="border border-gray-300 rounded px-2 py-1 text-sm focus:ring-green-500">
+                            <option value="aktif" {{ $statusHari == 'aktif' ? 'selected' : '' }}>🟢 Aktif</option>
+                            <option value="libur" {{ $statusHari == 'libur' ? 'selected' : '' }}>🔴 Libur</option>
+                            <option value="cuti"  {{ $statusHari == 'cuti'  ? 'selected' : '' }}>🟡 Cuti</option>
+                        </select>
+                    </div>
+                @endforeach
             </div>
-        @endforeach
-    </div>
-</div>
+        </div>
 
         <!-- JAM PRAKTIK -->
         <div class="grid grid-cols-2 gap-4 mb-4">
             <div>
                 <label class="block text-gray-700 font-semibold mb-2">Jam Mulai</label>
                 <input type="time" name="jam_mulai" value="{{ old('jam_mulai', $jadwal->jam_mulai) }}" 
-                    class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-green-500" required>
+                       class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-green-500" required>
             </div>
             <div>
                 <label class="block text-gray-700 font-semibold mb-2">Jam Selesai</label>
                 <input type="time" name="jam_selesai" value="{{ old('jam_selesai', $jadwal->jam_selesai) }}" 
-                    class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-green-500" required>
+                       class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-green-500" required>
             </div>
         </div>
 
@@ -113,7 +92,7 @@
         <div class="mb-6">
             <label class="block text-gray-700 font-semibold mb-2">Catatan Khusus / Pemberitahuan Kendala</label>
             <textarea name="catatan" rows="3" class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-green-500" placeholder="Contoh: Dokter Cuti dari tanggal 20-25 Juli.">{{ old('catatan', $jadwal->catatan) }}</textarea>
-            <p class="text-xs text-gray-500 mt-1">Catatan ini akan ditampilkan di halaman detail jadwal publik.</p>
+            <p class="text-xs text-gray-500 mt-1">Catatan ini akan langsung ditampilkan di kotak kuning halaman detail jadwal publik.</p>
         </div>
 
         <!-- BUTTONS -->
