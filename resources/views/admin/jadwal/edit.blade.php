@@ -32,36 +32,41 @@
                    class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-green-500" required>
         </div>
 
-        <!-- HARI PRAKTIK -->
+        <!-- HARI PRAKTIK & STATUS PER HARI -->
         <div class="mb-4">
-            <label class="block text-gray-700 font-semibold mb-2">Hari Praktik</label>
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-2">
-                @php
-                    $days = ['senin' => 'Senin', 'selasa' => 'Selasa', 'rabu' => 'Rabu', 
-                             'kamis' => 'Kamis', 'jumat' => 'Jumat', 'sabtu' => 'Sabtu', 'minggu' => 'Minggu'];
-                    
-                    // PENGECEKAN AMAN TIPE DATA HARI
-                    $hariData = $jadwal->hari_praktik ?? [];
-                    if (is_string($hariData)) {
-                        $hariData = json_decode($hariData, true) ?? [];
-                    }
-                @endphp
+            <label class="block text-gray-700 font-semibold mb-2">Status Hari Praktik Dokter</label>
+            <p class="text-xs text-gray-500 mb-3">Tentukan hari apa saja dokter AKTIF atau LIBUR.</p>
+            
+            @php
+                $days = ['senin' => 'Senin', 'selasa' => 'Selasa', 'rabu' => 'Rabu', 
+                         'kamis' => 'Kamis', 'jumat' => 'Jumat', 'sabtu' => 'Sabtu', 'minggu' => 'Minggu'];
+                
+                $hariData = $jadwal->hari_praktik ?? [];
+                if (is_string($hariData)) {
+                    $hariData = json_decode($hariData, true) ?? [];
+                }
+            @endphp
 
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
                 @foreach($days as $key => $label)
                     @php
-                        $isChecked = false;
-                        if (old('hari')) {
-                            $isChecked = is_array(old('hari')) && in_array($key, old('hari'));
-                        } else {
-                            $isChecked = isset($hariData[$key]) && ($hariData[$key] == 'aktif' || $hariData[$key] == '1' || $hariData[$key] === true);
+                        // Cek status hari dari data DB lama
+                        $statusHariLama = 'libur';
+                        if (is_array($hariData)) {
+                            if (isset($hariData[$key]) && ($hariData[$key] == 'aktif' || $hariData[$key] == '1' || $hariData[$key] === true)) {
+                                $statusHariLama = 'aktif';
+                            } elseif (in_array($key, $hariData)) {
+                                $statusHariLama = 'aktif';
+                            }
                         }
                     @endphp
-                    <label class="flex items-center space-x-2 p-2 border rounded hover:bg-gray-50 cursor-pointer">
-                        <input type="checkbox" name="hari[]" value="{{ $key }}" 
-                            {{ $isChecked ? 'checked' : '' }}
-                            class="rounded border-gray-300 text-green-600 focus:ring-green-500">
-                        <span>{{ $label }}</span>
-                    </label>
+                    <div class="flex items-center justify-between p-3 border rounded-lg bg-gray-50">
+                        <span class="font-medium text-gray-700">{{ $label }}</span>
+                        <select name="hari_praktik[{{ $key }}]" class="border border-gray-300 rounded px-2 py-1 text-sm focus:ring-green-500">
+                            <option value="aktif" {{ $statusHariLama == 'aktif' ? 'selected' : '' }}>🟢 Aktif</option>
+                            <option value="libur" {{ $statusHariLama == 'libur' ? 'selected' : '' }}>🔴 Libur</option>
+                        </select>
+                    </div>
                 @endforeach
             </div>
         </div>
@@ -80,18 +85,18 @@
             </div>
         </div>
 
-        <!-- STATUS DOKTER (DENGAN AUTO SELECT DATA LAMA) -->
+        <!-- STATUS UTAMA DOKTER -->
         <div class="mb-4">
-            <label class="block text-gray-700 font-semibold mb-2">Status Praktik Dokter</label>
+            <label class="block text-gray-700 font-semibold mb-2">Status Umum Praktik Dokter</label>
             @php $currentStatus = old('status', $jadwal->status ?? 'aktif'); @endphp
             <select name="status" class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-green-500" required>
-                <option value="aktif" {{ $currentStatus == 'aktif' ? 'selected' : '' }}>🟢 Aktif (Praktik Sesuai Jadwal)</option>
-                <option value="libur" {{ $currentStatus == 'libur' ? 'selected' : '' }}>🔴 Libur / Cuti</option>
-                <option value="kendala" {{ $currentStatus == 'kendala' ? 'selected' : '' }}>🟡 Ada Kendala / Pasien Gawat Darurat</option>
+                <option value="aktif" {{ $currentStatus == 'aktif' ? 'selected' : '' }}>🟢 Aktif (Praktik Normal)</option>
+                <option value="libur" {{ $currentStatus == 'libur' ? 'selected' : '' }}>🔴 Sedang Libur Total / Cuti</option>
+                <option value="kendala" {{ $currentStatus == 'kendala' ? 'selected' : '' }}>🟡 Ada Kendala / Perubahan Jadwal</option>
             </select>
         </div>
 
-        <!-- CATATAN KHUSUS (DENGAN DATA LAMA) -->
+        <!-- CATATAN KHUSUS -->
         <div class="mb-6">
             <label class="block text-gray-700 font-semibold mb-2">Catatan Khusus / Pemberitahuan Kendala</label>
             <textarea name="catatan" rows="3" class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-green-500" placeholder="Contoh: Dokter terlambat hadir karena ada penanganan pasien gawat di RS lain.">{{ old('catatan', $jadwal->catatan) }}</textarea>
