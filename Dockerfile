@@ -23,7 +23,9 @@ COPY . .
 # Install dependency & setup environment
 RUN composer install --no-dev --optimize-autoloader
 RUN if [ -f .env.production ]; then cp .env.production .env; else touch .env; fi
-RUN php artisan key:generate
+
+# TAMBAHKAN --force DI SINI
+RUN php artisan key:generate --force
 RUN php artisan storage:link --force
 
 # Atur izin folder
