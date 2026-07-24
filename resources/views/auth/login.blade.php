@@ -86,11 +86,12 @@
                 <i class="fas fa-sign-in-alt mr-2"></i> Log In
             </button>
         </form>
-
-        <!-- Link Register -->
-        <p class="text-center text-sm text-gray-500 mt-6">
-            Belum punya akun?
-            <a href="{{ route('register') }}" class="text-[#10453f] hover:text-[#0d362f] font-semibold">Register</a>
+        <!-- Info Lupa Password Sederhana -->
+        <p class="text-center text-xs text-gray-500 mt-6">
+            Lupa akun atau password? 
+            <a href="#" onclick="alert('Silakan hubungi Master Admin untuk melakukan reset password akun Anda.'); return false;" class="text-[#10453f] hover:underline font-medium">
+                Hubungi Admin
+            </a>
         </p>
     </div>
 

@@ -58,12 +58,11 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::get('/profil', [AdminProfilController::class, 'index'])->name('profil');
     Route::put('/profil/{id}', [AdminProfilController::class, 'update'])->name('profil.update');
 
-    // 3c. CRUD Layanan Medis (Menggunakan Route Resource)
+    // 3c. CRUD Layanan Medis
     Route::resource('layanan', AdminLayananController::class)->except(['show']);
 
     // 3d. CRUD Jadwal Dokter
     Route::resource('jadwal', AdminJadwalController::class)->except(['show']);
-    // Extra Route untuk Libur (AJAX)
     Route::post('/jadwal/{id}/add-libur', [AdminJadwalController::class, 'addLibur'])->name('jadwal.add-libur');
     Route::delete('/jadwal/libur/{id}', [AdminJadwalController::class, 'deleteLibur'])->name('jadwal.delete-libur');
 
@@ -77,9 +76,12 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::post('/admins', [AdminController::class, 'store'])->name('admins.store');
     Route::delete('/admins/{id}', [AdminController::class, 'destroy'])->name('admins.destroy');
     
-    // Ganti Password Admin
+    // Fitur Reset Password
     Route::get('/admins/{id}/edit-password', [AdminController::class, 'editPassword'])->name('admins.edit-password');
     Route::put('/admins/{id}/update-password', [AdminController::class, 'updatePassword'])->name('admins.update-password');
+    
+    // Fitur Transfer / Set Akun Master Utama
+    Route::post('/admins/{id}/make-master', [AdminController::class, 'makeMaster'])->name('admins.make-master');
 
 });
 

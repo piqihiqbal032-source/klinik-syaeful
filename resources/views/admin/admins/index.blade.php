@@ -1,58 +1,109 @@
 @extends('layouts.admin')
 
 @section('content')
-<div class="bg-white rounded-lg shadow-lg p-6">
-    <div class="flex justify-between items-center mb-6">
-        <h1 class="text-2xl font-bold text-green-800">Kelola Admin</h1>
-        <a href="{{ route('admin.admins.create') }}" class="bg-green-700 text-white px-4 py-2 rounded-lg hover:bg-green-800">
-            + Tambah Admin
+<div class="container-fluid px-4 py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="h3 text-gray-800 font-weight-bold mb-1">Kelola Admin</h1>
+            <p class="text-muted small mb-0">Manajemen akun administrator sistem klinik.</p>
+        </div>
+        <a href="{{ route('admin.admins.create') }}" class="btn btn-primary shadow-sm">
+            <i class="fas fa-plus fa-sm text-white-50 mr-2"></i>Tambah Admin Baru
         </a>
     </div>
 
+    {{-- Alert Notifikasi --}}
     @if(session('success'))
-        <div class="bg-green-100 text-green-700 px-4 py-2 rounded mb-4">{{ session('success') }}</div>
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="fas fa-check-circle mr-2"></i>{{ session('success') }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
     @endif
 
     @if(session('error'))
-        <div class="bg-red-100 text-red-700 px-4 py-2 rounded mb-4">{{ session('error') }}</div>
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="fas fa-exclamation-triangle mr-2"></i>{{ session('error') }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
     @endif
 
-    <div class="overflow-x-auto">
-        <table class="w-full">
-            <thead class="bg-gray-100">
-                <tr>
-                    <th class="px-4 py-2 text-left">ID</th>
-                    <th class="px-4 py-2 text-left">Nama</th>
-                    <th class="px-4 py-2 text-left">Email</th>
-                    <th class="px-4 py-2 text-left">Aksi</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach($admins as $admin)
-                <tr class="border-b">
-                    <td class="px-4 py-2">{{ $admin->id }}</td>
-                    <td class="px-4 py-2">{{ $admin->name }}</td>
-                    <td class="px-4 py-2">{{ $admin->email }}</td>
-                    <td class="px-4 py-2">
-                        @if($admin->id == 1)
-                            <span class="text-gray-400 text-sm">Admin Utama</span>
-                        @else
-                            <a href="{{ route('admin.admins.edit-password', $admin->id) }}" class="text-blue-600 hover:text-blue-800 mr-2">
-                                Ganti Password
-                            </a>
-                            <form action="{{ route('admin.admins.destroy', $admin->id) }}" method="POST" class="inline">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="text-red-600 hover:text-red-800" onclick="return confirm('Yakin ingin menghapus admin ini?')">
-                                    Hapus
-                                </button>
-                            </form>
-                        @endif
-                    </td>
-                </tr>
-                @endforeach
-            </tbody>
-        </table>
+    <div class="card shadow mb-4">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover align-middle mb-0" width="100%" cellspacing="0">
+                    <thead class="thead-light">
+                        <tr>
+                            <th style="width: 5%">#</th>
+                            <th>Nama Lengkap</th>
+                            <th>Email</th>
+                            <th style="width: 15%">Role / Status</th>
+                            <th style="width: 25%" class="text-center">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse($admins as $index => $admin)
+                            <tr>
+                                <td>{{ $index + 1 }}</td>
+                                <td class="font-weight-bold">{{ $admin->name }}</td>
+                                <td>{{ $admin->email }}</td>
+                                <td>
+                                    @if($admin->is_master)
+                                        <span class="badge badge-success px-3 py-2">
+                                            <i class="fas fa-crown mr-1"></i> Master Admin
+                                        </span>
+                                    @else
+                                        <span class="badge badge-secondary px-3 py-2">
+                                            <i class="fas fa-user-shield mr-1"></i> Admin
+                                        </span>
+                                    @endif
+                                </td>
+                                <td class="text-center">
+                                    <div class="d-flex justify-content-center align-items-center gap-2">
+                                        
+                                        {{-- 1. Tombol Reset / Edit Password --}}
+                                        <a href="{{ route('admin.admins.edit-password', $admin->id) }}" 
+                                           class="btn btn-sm btn-warning mr-1" 
+                                           title="Edit Password">
+                                            <i class="fas fa-key"></i> Pass
+                                        </a>
+
+                                        {{-- 2. Tombol Transfer Master Admin (Jika bukan dirinya & belum jadi master) --}}
+                                        @if(!$admin->is_master)
+                                            <form action="{{ route('admin.admins.make-master', $admin->id) }}" method="POST" class="d-inline mr-1" onsubmit="return confirm('Apakah Anda yakin ingin menjadikan {{ $admin->name }} sebagai Master Admin Utama? Status Master Anda akan dipindahkan.')">
+                                                @csrf
+                                                <button type="submit" class="btn btn-sm btn-info" title="Jadikan Master Admin">
+                                                    <i class="fas fa-crown"></i> Set Utama
+                                                </button>
+                                            </form>
+                                        @endif
+
+                                        {{-- 3. Tombol Hapus (Disembunyikan jika akun sendiri atau Master Admin) --}}
+                                        @if($admin->id !== Auth::id() && !$admin->is_master)
+                                            <form action="{{ route('admin.admins.destroy', $admin->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Apakah Anda yakin ingin menghapus admin {{ $admin->name }}?')">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn btn-sm btn-danger" title="Hapus Admin">
+                                                    <i class="fas fa-trash"></i> Hapus
+                                                </button>
+                                            </form>
+                                        @endif
+
+                                    </div>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="5" class="text-center py-4 text-muted">Belum ada data admin.</td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 </div>
 @endsection
