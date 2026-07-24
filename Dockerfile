@@ -20,7 +20,7 @@ WORKDIR /var/www/html
 
 COPY . .
 
-# Install dependency & setup environment saat build
+# Install dependency & setup environment
 RUN composer install --no-dev --optimize-autoloader
 RUN if [ -f .env.production ]; then cp .env.production .env; else touch .env; fi
 RUN php artisan key:generate
@@ -30,7 +30,10 @@ RUN php artisan storage:link --force
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 RUN chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
 
+# Berikan izin eksekusi pada script entrypoint
+RUN chmod +x /var/www/html/entrypoint.sh
+
 EXPOSE 8000
 
-# KUNCI UTAMA: Jalankan migrasi database saat Container Mulai Berjalan (Runtime)
-CMD php artisan config:clear && php artisan cache:clear && php artisan migrate --force && php artisan serve --host=0.0.0.0 --port=8000
+# Jalankan entrypoint script
+ENTRYPOINT ["/var/www/html/entrypoint.sh"]
