@@ -20,34 +20,17 @@ WORKDIR /var/www/html
 
 COPY . .
 
-# Install dependency dulu
+# Install dependency & setup environment saat build
 RUN composer install --no-dev --optimize-autoloader
-
-# Setup environment
 RUN if [ -f .env.production ]; then cp .env.production .env; else touch .env; fi
 RUN php artisan key:generate
 RUN php artisan storage:link --force
-RUN php artisan config:clear
 
-# Debug: Cek koneksi database
-RUN php artisan config:clear
-RUN php artisan cache:clear || true
-RUN echo "=== Testing Database Connection ==="
-RUN php -r "try { require 'vendor/autoload.php'; \$app = require_once 'bootstrap/app.php'; \$kernel = \$app->make(Illuminate\Contracts\Console\Kernel::class); \$kernel->bootstrap(); DB::connection()->getPdo(); echo 'DB Connected!'; } catch (\Throwable \$e) { echo 'DB Error: ' . \$e->getMessage(); }" || true
-RUN echo "=== Environment Variables ==="
-RUN echo "DB_CONNECTION: $(grep DB_CONNECTION .env || echo 'NOT FOUND')"
-RUN echo "DB_HOST: $(grep DB_HOST .env || echo 'NOT FOUND')"
-RUN echo "DB_DATABASE: $(grep DB_DATABASE .env || echo 'NOT FOUND')"
-RUN echo "DB_USERNAME: $(grep DB_USERNAME .env || echo 'NOT FOUND')"
-RUN echo "DB_PASSWORD: $(grep DB_PASSWORD .env || echo 'NOT FOUND')"
-RUN echo "=== End of Environment Variables ==="
-
-# Jalankan migration (BUAT TABEL)
-RUN php artisan migrate --force
-
+# Atur izin folder
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 RUN chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
 
 EXPOSE 8000
 
-CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8000"]
+# KUNCI UTAMA: Jalankan migrasi database saat Container Mulai Berjalan (Runtime)
+CMD php artisan config:clear && php artisan cache:clear && php artisan migrate --force && php artisan serve --host=0.0.0.0 --port=8000
