@@ -15,15 +15,8 @@ class AdminController extends Controller
      */
     private function checkMasterAccess()
     {
-        // Masukkan email kamu yang sedang dipakai login saat ini
-        $allowedEmails = [
-            'admin@klinik.com', // Ganti dengan emailmu
-        ];
-
-        // Mengizinkan jika is_master true ATAU emailnya terdaftar di daftar di atas
-        $isMaster = Auth::check() && (Auth::user()->is_master || in_array(Auth::user()->email, $allowedEmails));
-
-        if (!$isMaster) {
+       // Mengizinkan HANYA jika pengguna terautentikasi dan is_master bernilai true
+        if (!Auth::check() || !Auth::user()->is_master) {
             redirect()->route('admin.dashboard')->with('error', 'Akses ditolak! Halaman ini khusus Master Admin.')->send();
             exit;
         }
