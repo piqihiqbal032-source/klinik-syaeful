@@ -43,7 +43,7 @@
             <form action="{{ route('admin.admins.store') }}" method="POST" class="space-y-6">
                 @csrf
 
-                <!-- Field Nama -->
+                <!-- Input Nama Lengkap -->
                 <div>
                     <label for="name" class="block text-sm font-medium text-slate-700 mb-1">
                         Nama Lengkap <span class="text-red-500">*</span>
@@ -56,99 +56,96 @@
                     @enderror
                 </div>
 
-                <!-- Field Email -->
+                <!-- Input Alamat Email -->
                 <div>
                     <label for="email" class="block text-sm font-medium text-slate-700 mb-1">
                         Alamat Email <span class="text-red-500">*</span>
                     </label>
                     <input type="email" id="email" name="email" value="{{ old('email') }}" required
                         class="w-full px-4 py-2.5 bg-slate-50 border border-slate-300 rounded-lg text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white transition @error('email') border-red-500 @enderror"
-                        placeholder="contoh@klinik.com">
+                        placeholder="contoh: admin@domain.com">
                     @error('email')
                         <p class="mt-1 text-xs text-red-500">{{ $message }}</p>
                     @enderror
                 </div>
 
-                <!-- Field Tipe Admin / Master Status -->
-                <div>
-                    <label for="is_master" class="block text-sm font-medium text-slate-700 mb-1">
-                        Tipe Akses Admin <span class="text-red-500">*</span>
-                    </label>
-                    <select id="is_master" name="is_master" 
-                        class="w-full px-4 py-2.5 bg-slate-50 border border-slate-300 rounded-lg text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white transition">
-                        <option value="0" {{ old('is_master') == '0' ? 'selected' : '' }}>Admin Biasa</option>
-                        <option value="1" {{ old('is_master') == '1' ? 'selected' : '' }}>Master Admin</option>
-                    </select>
+                <!-- Grid Password & Konfirmasi Password -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    
+                    <!-- Password -->
+                    <div x-data="{ showPassword: false }">
+                        <label for="password" class="block text-sm font-medium text-slate-700 mb-1">
+                            Password <span class="text-red-500">*</span>
+                        </label>
+                        <div class="relative">
+                            <input 
+                                :type="showPassword ? 'text' : 'password'" 
+                                id="password" 
+                                name="password" 
+                                required
+                                class="w-full px-4 py-2.5 bg-slate-50 border border-slate-300 rounded-lg text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white transition pr-10 @error('password') border-red-500 @enderror"
+                                placeholder="Minimal 6 karakter"
+                            >
+                            <!-- Tombol Toggle Mata -->
+                            <button 
+                                type="button" 
+                                @click="showPassword = !showPassword" 
+                                class="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600 focus:outline-none"
+                            >
+                                <!-- Icon Mata Tertutup -->
+                                <svg x-show="!showPassword" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                </svg>
+                                <!-- Icon Mata Dicoret -->
+                                <svg x-show="showPassword" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="display: none;">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858-5.908a10.007 10.007 0 012.122-.063c4.478 0 8.268 2.943 9.542 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21M3 3l18 18" />
+                                </svg>
+                            </button>
+                        </div>
+                        @error('password')
+                            <p class="mt-1 text-xs text-red-500">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <!-- Konfirmasi Password -->
+                    <div x-data="{ showConfirmPassword: false }">
+                        <label for="password_confirmation" class="block text-sm font-medium text-slate-700 mb-1">
+                            Konfirmasi Password <span class="text-red-500">*</span>
+                        </label>
+                        <div class="relative">
+                            <input 
+                                :type="showConfirmPassword ? 'text' : 'password'" 
+                                id="password_confirmation" 
+                                name="password_confirmation" 
+                                required
+                                class="w-full px-4 py-2.5 bg-slate-50 border border-slate-300 rounded-lg text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white transition pr-10"
+                                placeholder="Ulangi password di atas"
+                            >
+                            <!-- Tombol Toggle Mata -->
+                            <button 
+                                type="button" 
+                                @click="showConfirmPassword = !showConfirmPassword" 
+                                class="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600 focus:outline-none"
+                            >
+                                <!-- Icon Mata Tertutup -->
+                                <svg x-show="!showConfirmPassword" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                </svg>
+                                <!-- Icon Mata Dicoret -->
+                                <svg x-show="showConfirmPassword" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="display: none;">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858-5.908a10.007 10.007 0 012.122-.063c4.478 0 8.268 2.943 9.542 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21M3 3l18 18" />
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+
                 </div>
 
-                <!-- Field Password -->
-                <div x-data="{ showPassword: false }">
-                    <label for="password" class="block text-sm font-medium text-slate-700 mb-1">
-                        Password <span class="text-red-500">*</span>
-                    </label>
-                    
-                    <div class="relative">
-                        <input 
-                            :type="showPassword ? 'text' : 'password'" 
-                            id="password"
-                            name="password" 
-                            required
-                            class="w-full px-4 py-2.5 bg-slate-50 border border-slate-300 rounded-lg text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white transition pr-10 @error('password') border-red-500 @enderror" 
-                            placeholder="Masukkan password (minimal 6 karakter)"
-                        >
-                        
-                        <!-- Tombol Icon Mata (Toggle Show/Hide) -->
-                        <button 
-                            type="button" 
-                            @click="showPassword = !showPassword" 
-                            class="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600 focus:outline-none"
-                        >
-                            <svg x-show="!showPassword" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                            </svg>
-                            
-                            <svg x-show="showPassword" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="display: none;">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858-5.908a10.007 10.007 0 012.122-.063c4.478 0 8.268 2.943 9.542 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21M3 3l18 18" />
-                            </svg>
-                        </button>
-                    </div>
-                    @error('password')
-                        <p class="mt-1 text-xs text-red-500">{{ $message }}</p>
-                    @enderror
-                </div>
-
-                <!-- Field Konfirmasi Password -->
-                <div x-data="{ showConfirmPassword: false }">
-                    <label for="password_confirmation" class="block text-sm font-medium text-slate-700 mb-1">
-                        Konfirmasi Password <span class="text-red-500">*</span>
-                    </label>
-                    
-                    <div class="relative">
-                        <input 
-                            :type="showConfirmPassword ? 'text' : 'password'" 
-                            id="password_confirmation"
-                            name="password_confirmation" 
-                            required
-                            class="w-full px-4 py-2.5 bg-slate-50 border border-slate-300 rounded-lg text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white transition pr-10" 
-                            placeholder="Ulangi password di atas"
-                        >
-                        
-                        <button 
-                            type="button" 
-                            @click="showConfirmPassword = !showConfirmPassword" 
-                            class="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600 focus:outline-none"
-                        >
-                            <svg x-show="!showConfirmPassword" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                            </svg>
-                            
-                            <svg x-show="showConfirmPassword" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="display: none;">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858-5.908a10.007 10.007 0 012.122-.063c4.478 0 8.268 2.943 9.542 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21M3 3l18 18" />
-                            </svg>
-                        </button>
-                    </div>
+                <!-- Informasi Tambahan tentang Role -->
+                <div class="bg-emerald-50 border border-emerald-100 rounded-xl p-4 text-xs text-emerald-800">
+                    <strong>Catatan:</strong> Akun baru secara otomatis dibuat sebagai <strong>Admin Biasa</strong>. Anda dapat mengubah statusnya menjadi Master Admin sewaktu-waktu dari halaman daftar admin.
                 </div>
 
                 <!-- Tombol Aksi -->
