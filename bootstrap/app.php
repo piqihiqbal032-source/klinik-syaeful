@@ -12,7 +12,8 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        //
+        // Mengarahkan pengguna yang belum login (guest) secara eksplisit ke route 'login'
+        $middleware->redirectGuestsTo(fn (Request $request) => route('login'));
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->shouldRenderJsonWhen(

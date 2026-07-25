@@ -35,10 +35,7 @@ Route::get('/kontak', [KontakController::class, 'index'])->name('kontak');
 | 2. AUTH & REDIRECT
 |--------------------------------------------------------------------------
 */
-Route::get('/login', function () {
-    return view('auth.login');
-})->name('login');
-
+// Mengalihkan /dashboard utama ke /admin/dashboard
 Route::get('/dashboard', function () {
     return redirect()->route('admin.dashboard');
 })->name('dashboard');
@@ -50,6 +47,11 @@ Route::get('/dashboard', function () {
 |--------------------------------------------------------------------------
 */
 Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
+
+    // AUTO REDIRECT jika mengetik /admin saja di browser
+    Route::get('/', function () {
+        return redirect()->route('admin.dashboard');
+    });
 
     // 3a. Dashboard
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
