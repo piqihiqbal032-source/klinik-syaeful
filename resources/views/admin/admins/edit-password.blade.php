@@ -30,7 +30,7 @@
             
             <!-- Ringkasan Info Akun Admin -->
             <div class="flex items-center space-x-4 bg-slate-50 border border-slate-200 p-4 rounded-xl mb-6">
-                <div class="w-12 h-12 bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center font-bold text-lg">
+                <div class="w-12 h-12 bg-emerald-100 text-emerald-700 rounded-full flex items-center justify-center font-bold text-lg">
                     {{ strtoupper(substr($admin->name, 0, 1)) }}
                 </div>
                 <div>
@@ -64,7 +64,7 @@
                         Password Baru <span class="text-red-500">*</span>
                     </label>
                     <input type="password" id="new_password" name="new_password" required
-                        class="w-full px-4 py-2.5 bg-slate-50 border border-slate-300 rounded-lg text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition @error('new_password') border-red-500 @enderror"
+                        class="w-full px-4 py-2.5 bg-slate-50 border border-slate-300 rounded-lg text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white transition @error('new_password') border-red-500 @enderror"
                         placeholder="Masukkan password baru (minimal 6 karakter)">
                     @error('new_password')
                         <p class="mt-1 text-xs text-red-500">{{ $message }}</p>
@@ -77,7 +77,7 @@
                         Konfirmasi Password Baru <span class="text-red-500">*</span>
                     </label>
                     <input type="password" id="new_password_confirmation" name="new_password_confirmation" required
-                        class="w-full px-4 py-2.5 bg-slate-50 border border-slate-300 rounded-lg text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition"
+                        class="w-full px-4 py-2.5 bg-slate-50 border border-slate-300 rounded-lg text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white transition"
                         placeholder="Ulangi password baru di atas">
                 </div>
 
@@ -88,7 +88,7 @@
                         Batal
                     </a>
                     <button type="submit" 
-                        class="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-lg shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition">
+                        class="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-medium rounded-lg shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 transition">
                         Update Password
                     </button>
                 </div>

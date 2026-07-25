@@ -49,7 +49,7 @@
                         Nama Lengkap <span class="text-red-500">*</span>
                     </label>
                     <input type="text" id="name" name="name" value="{{ old('name') }}" required
-                        class="w-full px-4 py-2.5 bg-slate-50 border border-slate-300 rounded-lg text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition @error('name') border-red-500 @enderror"
+                        class="w-full px-4 py-2.5 bg-slate-50 border border-slate-300 rounded-lg text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white transition @error('name') border-red-500 @enderror"
                         placeholder="Masukkan nama lengkap admin">
                     @error('name')
                         <p class="mt-1 text-xs text-red-500">{{ $message }}</p>
@@ -62,7 +62,7 @@
                         Alamat Email <span class="text-red-500">*</span>
                     </label>
                     <input type="email" id="email" name="email" value="{{ old('email') }}" required
-                        class="w-full px-4 py-2.5 bg-slate-50 border border-slate-300 rounded-lg text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition @error('email') border-red-500 @enderror"
+                        class="w-full px-4 py-2.5 bg-slate-50 border border-slate-300 rounded-lg text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white transition @error('email') border-red-500 @enderror"
                         placeholder="contoh: admin@domain.com">
                     @error('email')
                         <p class="mt-1 text-xs text-red-500">{{ $message }}</p>
@@ -77,7 +77,7 @@
                             Password <span class="text-red-500">*</span>
                         </label>
                         <input type="password" id="password" name="password" required
-                            class="w-full px-4 py-2.5 bg-slate-50 border border-slate-300 rounded-lg text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition @error('password') border-red-500 @enderror"
+                            class="w-full px-4 py-2.5 bg-slate-50 border border-slate-300 rounded-lg text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white transition @error('password') border-red-500 @enderror"
                             placeholder="Minimal 6 karakter">
                         @error('password')
                             <p class="mt-1 text-xs text-red-500">{{ $message }}</p>
@@ -90,13 +90,13 @@
                             Konfirmasi Password <span class="text-red-500">*</span>
                         </label>
                         <input type="password" id="password_confirmation" name="password_confirmation" required
-                            class="w-full px-4 py-2.5 bg-slate-50 border border-slate-300 rounded-lg text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition"
+                            class="w-full px-4 py-2.5 bg-slate-50 border border-slate-300 rounded-lg text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white transition"
                             placeholder="Ulangi password di atas">
                     </div>
                 </div>
 
                 <!-- Informasi Tambahan tentang Role -->
-                <div class="bg-indigo-50 border border-indigo-100 rounded-xl p-4 text-xs text-indigo-700">
+                <div class="bg-emerald-50 border border-emerald-100 rounded-xl p-4 text-xs text-emerald-800">
                     <strong>Catatan:</strong> Akun baru secara otomatis dibuat sebagai <strong>Admin Biasa</strong>. Anda dapat mengubah statusnya menjadi Master Admin sewaktu-waktu dari halaman daftar admin.
                 </div>
 
@@ -107,7 +107,7 @@
                         Batal
                     </a>
                     <button type="submit" 
-                        class="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-lg shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition">
+                        class="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-medium rounded-lg shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 transition">
                         Simpan Admin
                     </button>
                 </div>
