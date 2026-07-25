@@ -20,16 +20,23 @@ WORKDIR /var/www/html
 
 COPY . .
 
-# Install dependency & setup environment
+# Install dependency Composer
 RUN composer install --no-dev --optimize-autoloader
+
+# --- TAMBAHAN UNTUK CSS & JS BUILD (TAILWIND / VITE) ---
+RUN npm ci || npm install
+RUN npm run build
+# ------------------------------------------------------
+
+# Setup environment
 RUN if [ -f .env.production ]; then cp .env.production .env; else touch .env; fi
 
-# TAMBAHKAN --force DI SINI
+# Generate Key & Storage Link
 RUN php artisan key:generate --force
 RUN php artisan storage:link --force
 
-# Atur izin folder
-RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
+# Atur izin folder (termasuk folder public/build hasil npm run build)
+RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache /var/www/html/public
 RUN chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
 
 # Berikan izin eksekusi pada script entrypoint
