@@ -19,9 +19,6 @@ use App\Http\Controllers\Admin\KontakController as AdminKontakController;
 use App\Http\Controllers\Admin\KegiatanController as AdminKegiatanController;
 use App\Http\Controllers\Admin\AdminController;
 
- use App\Models\LayananMedis;
- use Illuminate\Support\Str;
-
 /*
 |--------------------------------------------------------------------------
 | 1. HALAMAN PUBLIK
@@ -35,36 +32,6 @@ Route::get('/jadwal', [JadwalController::class, 'index'])->name('jadwal');
 Route::get('/jadwal/{id}', [JadwalController::class, 'show'])->name('jadwal.detail');
 Route::get('/kontak', [KontakController::class, 'index'])->name('kontak');
 Route::get('/berita-kegiatan', [KegiatanController::class, 'index'])->name('kegiatan.index');
-
-//DEBUG ROUTE (Cek data)
-Route::get('/debug-layanan', function() {
-    $count = App\Models\LayananMedis::count();
-    $data = App\Models\LayananMedis::all()->map(function($item) {
-        return [
-            'id' => $item->id_layanan,
-            'nama' => $item->nama_layanan,
-            'slug' => $item->slug ?? 'KOSONG'
-        ];
-    });
-    return response()->json([
-        'total' => $count,
-        'data' => $data
-    ]);
-});
-
-//  FIX SLUG ROUTE
-Route::get('/fix-slug', function() {
-    $count = 0;
-    $layanans = LayananMedis::all();
-    
-    foreach($layanans as $layanan) {
-        $layanan->slug = Str::slug($layanan->nama_layanan);
-        $layanan->save();
-        $count++;
-    }
-    
-    return "✅ $count slug berhasil diupdate!";
-});
 
 /*
 |--------------------------------------------------------------------------
