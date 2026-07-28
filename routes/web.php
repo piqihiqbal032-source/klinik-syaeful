@@ -33,6 +33,21 @@ Route::get('/jadwal/{id}', [JadwalController::class, 'show'])->name('jadwal.deta
 Route::get('/kontak', [KontakController::class, 'index'])->name('kontak');
 Route::get('/berita-kegiatan', [KegiatanController::class, 'index'])->name('kegiatan.index');
 
+Route::get('/debug-layanan', function() {
+    $count = App\Models\LayananMedis::count();
+    $data = App\Models\LayananMedis::all()->map(function($item) {
+        return [
+            'id' => $item->id_layanan,
+            'nama' => $item->nama_layanan,
+            'slug' => $item->slug ?? 'KOSONG'
+        ];
+    });
+    return response()->json([
+        'total' => $count,
+        'data' => $data
+    ]);
+});
+
 /*
 |--------------------------------------------------------------------------
 | 2. AUTH & REDIRECT
