@@ -1,35 +1,103 @@
 @extends('layouts.admin')
 
 @section('content')
-<div class="bg-white rounded-lg shadow-lg p-6">
-    <h1 class="text-2xl font-bold text-green-800 mb-6">Edit Layanan Medis</h1>
+<div class="bg-white rounded-lg shadow-lg p-6 max-w-4xl mx-auto">
+    <div class="flex justify-between items-center mb-6 border-b pb-4">
+        <h1 class="text-2xl font-bold text-green-800">Edit Layanan Medis</h1>
+        <a href="{{ route('admin.layanan.index') }}" class="text-gray-600 hover:text-gray-800 text-sm">
+            &larr; Kembali ke Daftar
+        </a>
+    </div>
 
-    <form action="{{ route('admin.layanan.update', $layanan->id_layanan) }}" method="POST">
+    @if ($errors->any())
+        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-6">
+            <ul class="list-disc pl-5 text-sm">
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
+    <form action="{{ route('admin.layanan.update', $layanan->id_layanan ?? $layanan->id) }}" method="POST" enctype="multipart/form-data">
         @csrf
         @method('PUT')
 
-        <div class="mb-4">
-            <label class="block text-gray-700 font-semibold mb-2">Nama Layanan</label>
-            <input type="text" name="nama_layanan" value="{{ $layanan->nama_layanan }}" class="w-full border border-gray-300 rounded-lg px-4 py-2" required>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
+            <!-- NAMA LAYANAN -->
+            <div>
+                <label class="block text-gray-700 font-semibold mb-2">Nama Layanan <span class="text-red-500">*</span></label>
+                <input type="text" name="nama_layanan" value="{{ old('nama_layanan', $layanan->nama_layanan) }}" class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-green-500 outline-none" required>
+            </div>
+
+            <!-- STATUS BPJS -->
+            <div>
+                <label class="block text-gray-700 font-semibold mb-2">Penjaminan / BPJS <span class="text-red-500">*</span></label>
+                <select name="status_bpjs" class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-green-500 outline-none">
+                    <option value="BPJS & Umum" {{ old('status_bpjs', $layanan->status_bpjs) == 'BPJS & Umum' ? 'selected' : '' }}>BPJS & Umum</option>
+                    <option value="BPJS" {{ old('status_bpjs', $layanan->status_bpjs) == 'BPJS' ? 'selected' : '' }}>Hanya BPJS</option>
+                    <option value="Umum" {{ old('status_bpjs', $layanan->status_bpjs) == 'Umum' ? 'selected' : '' }}>Pasien Umum</option>
+                </select>
+            </div>
         </div>
 
+        {{-- ✅ TAMBAHKAN DESKRIPSI (WAJIB) --}}
         <div class="mb-4">
-            <label class="block text-gray-700 font-semibold mb-2">Deskripsi</label>
-            <textarea name="deskripsi" rows="3" class="w-full border border-gray-300 rounded-lg px-4 py-2" required>{{ $layanan->deskripsi }}</textarea>
+            <label class="block text-gray-700 font-semibold mb-2">Deskripsi <span class="text-red-500">*</span></label>
+            <textarea name="deskripsi" rows="3" class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-green-500 outline-none" required>{{ old('deskripsi', $layanan->deskripsi) }}</textarea>
+            @error('deskripsi')
+                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+            @enderror
         </div>
 
+        <!-- FOTO -->
         <div class="mb-4">
-            <label class="block text-gray-700 font-semibold mb-2">Status</label>
-            <select name="status_aktif" class="w-full border border-gray-300 rounded-lg px-4 py-2">
-                <option value="aktif" {{ $layanan->status_aktif == 'aktif' ? 'selected' : '' }}>Aktif</option>
-                <option value="tidak_aktif" {{ $layanan->status_aktif == 'tidak_aktif' ? 'selected' : '' }}>Tidak Aktif</option>
+            <label class="block text-gray-700 font-semibold mb-2">Foto Layanan / Fasilitas</label>
+            @if($layanan->foto)
+                <div class="mb-2">
+                    <p class="text-xs text-gray-500 mb-1">Foto saat ini:</p>
+                    <img src="{{ asset('storage/' . $layanan->foto) }}" alt="Preview" class="w-24 h-24 object-cover rounded border">
+                </div>
+            @endif
+            <input type="file" name="foto" class="w-full border border-gray-300 rounded-lg p-2 text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-green-50 file:text-green-700 hover:file:bg-green-100">
+            <p class="text-xs text-gray-500 mt-1">Kosongkan jika tidak ingin mengubah foto (Maksimal 2MB).</p>
+        </div>
+
+        <!-- DESKRIPSI SINGKAT -->
+        <div class="mb-4">
+            <label class="block text-gray-700 font-semibold mb-2">Deskripsi Singkat</label>
+            <textarea name="deskripsi_singkat" rows="2" class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-green-500 outline-none">{{ old('deskripsi_singkat', $layanan->deskripsi_singkat) }}</textarea>
+        </div>
+
+        <!-- DESKRIPSI LENGKAP -->
+        <div class="mb-4">
+            <label class="block text-gray-700 font-semibold mb-2">Deskripsi Lengkap & Prosedur Medis</label>
+            <textarea name="deskripsi_lengkap" rows="5" class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-green-500 outline-none">{{ old('deskripsi_lengkap', $layanan->deskripsi_lengkap) }}</textarea>
+        </div>
+
+        <!-- PERSYARATAN -->
+        <div class="mb-4">
+            <label class="block text-gray-700 font-semibold mb-2">Persyaratan / Persiapan Pasien</label>
+            <textarea name="persyaratan" rows="4" class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-green-500 outline-none">{{ old('persyaratan', $layanan->persyaratan) }}</textarea>
+        </div>
+
+        <div class="mb-6">
+            <label class="block text-gray-700 font-semibold mb-2">Status <span class="text-red-500">*</span></label>
+            <select name="status_aktif" class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-green-500 outline-none" required>
+                <option value="aktif" {{ old('status_aktif', $layanan->status_aktif) == 'aktif' ? 'selected' : '' }}>Aktif</option>
+                <option value="tidak_aktif" {{ old('status_aktif', $layanan->status_aktif) == 'tidak_aktif' ? 'selected' : '' }}>Tidak Aktif</option>
             </select>
         </div>
 
-        <button type="submit" class="bg-green-700 text-white px-6 py-2 rounded-lg hover:bg-green-800">
-            Update
-        </button>
-        <a href="{{ route('admin.layanan.index') }}" class="bg-gray-500 text-white px-6 py-2 rounded-lg hover:bg-gray-600 ml-2">Batal</a>
+        <!-- TOMBOL -->
+        <div class="flex items-center">
+            <button type="submit" class="bg-green-700 text-white px-6 py-2.5 rounded-lg hover:bg-green-800 transition duration-200 font-medium">
+                Update Layanan
+            </button>
+            <a href="{{ route('admin.layanan.index') }}" class="bg-gray-500 text-white px-6 py-2.5 rounded-lg hover:bg-gray-600 ml-3 transition duration-200 font-medium">
+                Batal
+            </a>
+        </div>
     </form>
 </div>
 @endsection

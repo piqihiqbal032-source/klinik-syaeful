@@ -20,10 +20,8 @@
 </head>
 <body>
     <div class="min-h-screen bg-gray-50 flex">
-        
-        <!-- ============================================================ -->
+    
         <!-- SIDEBAR KIRI -->
-        <!-- ============================================================ -->
         <aside id="sidebar" class="fixed md:relative z-40 w-64 bg-white shadow-lg min-h-screen p-4 flex flex-col border-r border-gray-100 transition-transform duration-300 -translate-x-full md:translate-x-0">
             
             <!-- Logo & Judul -->
@@ -62,19 +60,34 @@
                     </a>
                 </li>
                 <li>
+                    <a href="{{ route('admin.kegiatan.index') }}" 
+                    class="block px-4 py-3 rounded-lg {{ request()->routeIs('admin.kegiatan*') ? 'text-[#10453f] bg-green-50 border-l-4 border-[#10453f] font-semibold' : 'text-gray-600 hover:text-[#10453f] hover:bg-green-50 transition' }}">
+                        <i class="fas fa-newspaper mr-3 w-5 text-center"></i> BERITA & KEGIATAN
+                    </a>
+                </li>
+                <li>
                     <a href="{{ route('admin.kontak.index') }}" 
                     class="block px-4 py-3 rounded-lg {{ request()->routeIs('admin.kontak*') ? 'text-[#10453f] bg-green-50 border-l-4 border-[#10453f] font-semibold' : 'text-gray-600 hover:text-[#10453f] hover:bg-green-50 transition' }}">
                         <i class="fas fa-phone mr-3 w-5 text-center"></i> KONTAK KLINIK
                     </a>
                 </li>
+                @if(auth()->user() && auth()->user()->is_master == 1)
+                <li>
+                    <a href="{{ route('admin.admins.index') }}" 
+                    class="block px-4 py-3 rounded-lg {{ request()->routeIs('admin.admins*') ? 'text-[#10453f] bg-green-50 border-l-4 border-[#10453f] font-semibold' : 'text-gray-600 hover:text-[#10453f] hover:bg-green-50 transition' }}">
+                        <i class="fas fa-users-cog mr-3 w-5 text-center"></i> KELOLA ADMIN
+                    </a>
+                </li>
+                @else
+                <li class="opacity-50 cursor-not-allowed">
+                    <a href="#" onclick="alert('⚠️ Hanya akun MASTER yang dapat mengakses menu ini!')" 
+                    class="block px-4 py-3 rounded-lg text-gray-400 hover:bg-gray-50 transition">
+                        <i class="fas fa-users-cog mr-3 w-5 text-center"></i> KELOLA ADMIN <span class="text-xs text-red-400">(Master Only)</span>
+                    </a>
+                </li>
+                @endif
             </ul>
-            <li>
-                <a href="{{ route('admin.admins.index') }}" 
-                class="block px-4 py-3 rounded-lg {{ request()->routeIs('admin.admins*') ? 'text-[#10453f] bg-green-50 border-l-4 border-[#10453f] font-semibold' : 'text-gray-600 hover:text-[#10453f] hover:bg-green-50 transition' }}">
-                    <i class="fas fa-users-cog mr-3 w-5 text-center"></i> KELOLA ADMIN
-                </a>
-            </li>
-
+            
             <!-- Logout -->
             <div class="border-t border-gray-100 pt-4 mt-auto">
                 <form method="POST" action="{{ route('logout') }}">
@@ -86,14 +99,9 @@
             </div>
         </aside>
 
-        <!-- ============================================================ -->
-        <!-- OVERLAY (GELAPKAN LAYAR SAAT SIDEBAR TERBUKA DI HP) -->
-        <!-- ============================================================ -->
         <div id="overlay" onclick="toggleSidebar()" class="fixed inset-0 bg-black/50 z-30 hidden md:hidden"></div>
 
-        <!-- ============================================================ -->
         <!-- KONTEN UTAMA -->
-        <!-- ============================================================ -->
         <main class="flex-1 min-h-screen">
             
             <!-- NAVBAR ATAS (Hanya untuk HP: Logo + Tombol Hamburger) -->
@@ -126,8 +134,6 @@
             const sidebar = document.getElementById('sidebar');
             const overlay = document.getElementById('overlay');
 
-            // Saat sidebar muncul, overlay muncul
-            // Saat sidebar sembunyi, overlay sembunyi
             const observer = new MutationObserver(function() {
                 if (sidebar.classList.contains('-translate-x-full')) {
                     overlay.classList.add('hidden');

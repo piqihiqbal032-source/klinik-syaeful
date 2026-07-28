@@ -6,7 +6,7 @@
         
         <!-- NAMA DOKTER -->
         <h2 class="text-2xl font-bold text-gray-800 mb-1">
-            {{ $dokter->nama_dokter ?? $jadwal->nama_dokter }}
+            {{ $jadwal->nama_dokter }}  {{-- ← Ubah dari $dokter ke $jadwal --}}
         </h2>
         <p class="text-sm text-gray-500 mb-6">Jadwal Praktik Mingguan</p>
 
@@ -21,16 +21,15 @@
                 'minggu' => 'Minggu'
             ];
 
-            $dataJadwal = $dokter ?? $jadwal;
-            $hariData = $dataJadwal->hari_praktik ?? [];
+            $hariData = $jadwal->hari_praktik ?? [];
 
-            // Jika format tersimpan sebagai JSON string
+            // Jika masih string, decode
             if (is_string($hariData)) {
                 $hariData = json_decode($hariData, true) ?? [];
             }
         @endphp
 
-        <!-- TABEL JADWAL HARI & STATUS -->
+        <!-- TABEL JADWAL -->
         <div class="overflow-x-auto rounded-lg border border-gray-200 mb-6">
             <table class="w-full text-left border-collapse">
                 <thead>
@@ -45,7 +44,6 @@
                     @foreach($days as $key => $label)
                         @php
                             $st = $hariData[$key] ?? 'libur';
-                            // Compatibility dengan boolean/1
                             if ($st === true || $st === '1') { 
                                 $st = 'aktif'; 
                             }
@@ -54,8 +52,8 @@
                             <td class="p-3 font-medium text-gray-700">{{ $label }}</td>
                             
                             @if($st == 'aktif')
-                                <td class="p-3 text-gray-600">{{ $dataJadwal->jam_mulai }}</td>
-                                <td class="p-3 text-gray-600">{{ $dataJadwal->jam_selesai }}</td>
+                                <td class="p-3 text-gray-600">{{ $jadwal->jam_mulai }}</td>
+                                <td class="p-3 text-gray-600">{{ $jadwal->jam_selesai }}</td>
                                 <td class="p-3">
                                     <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-green-100 text-green-800">
                                         🟢 Aktif
@@ -84,18 +82,18 @@
             </table>
         </div>
 
-        <!-- KOTAK CATATAN KHUSUS / PEMBERITAHUAN -->
+        <!-- CATATAN -->
         <div class="p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
-            @if(!empty($dataJadwal->catatan))
-                <p class="font-bold text-yellow-800 text-xs uppercase tracking-wide mb-1">📢 Pemberitahuan Klinik / Informasi Cuti:</p>
-                <p class="text-yellow-900 text-sm font-medium">{{ $dataJadwal->catatan }}</p>
+            @if(!empty($jadwal->catatan))
+                <p class="font-bold text-yellow-800 text-xs uppercase tracking-wide mb-1">📢 Pemberitahuan Klinik:</p>
+                <p class="text-yellow-900 text-sm font-medium">{{ $jadwal->catatan }}</p>
             @else
                 <p class="text-yellow-700 text-sm">ℹ️ Jadwal sewaktu-waktu dapat berubah, silakan hubungi kontak klinik untuk konfirmasi.</p>
             @endif
         </div>
 
         <div class="mt-6">
-            <a href="{{ url()->previous() }}" class="text-sm font-medium text-green-700 hover:underline">
+            <a href="{{ route('jadwal') }}" class="text-sm font-medium text-green-700 hover:underline">
                 &larr; Kembali ke daftar jadwal
             </a>
         </div>

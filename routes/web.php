@@ -5,9 +5,10 @@ use Illuminate\Support\Facades\Route;
 // Import Controller Publik
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProfilController;
-use App\Http\Controllers\LayananController;
-use App\Http\Controllers\JadwalController;
+use App\Http\Controllers\LayananController; 
+use App\Http\Controllers\JadwalController; 
 use App\Http\Controllers\KontakController;
+use App\Http\Controllers\KegiatanController;
 
 // Import Controller Admin
 use App\Http\Controllers\Admin\DashboardController;
@@ -15,6 +16,7 @@ use App\Http\Controllers\Admin\ProfilController as AdminProfilController;
 use App\Http\Controllers\Admin\LayananController as AdminLayananController;
 use App\Http\Controllers\Admin\JadwalController as AdminJadwalController;
 use App\Http\Controllers\Admin\KontakController as AdminKontakController;
+use App\Http\Controllers\Admin\KegiatanController as AdminKegiatanController;
 use App\Http\Controllers\Admin\AdminController;
 
 /*
@@ -25,10 +27,11 @@ use App\Http\Controllers\Admin\AdminController;
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/profil', [ProfilController::class, 'index'])->name('profil');
 Route::get('/layanan', [LayananController::class, 'index'])->name('layanan');
+Route::get('/layanan/{slug}', [LayananController::class, 'show'])->name('layanan.detail'); 
 Route::get('/jadwal', [JadwalController::class, 'index'])->name('jadwal');
 Route::get('/jadwal/{id}', [JadwalController::class, 'show'])->name('jadwal.detail');
 Route::get('/kontak', [KontakController::class, 'index'])->name('kontak');
-
+Route::get('/berita-kegiatan', [KegiatanController::class, 'index'])->name('kegiatan.index');
 
 /*
 |--------------------------------------------------------------------------
@@ -63,16 +66,19 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     // 3c. CRUD Layanan Medis
     Route::resource('layanan', AdminLayananController::class)->except(['show']);
 
-    // 3d. CRUD Jadwal Dokter
+    // 3d. CRUD Berita & Kegiatan
+    Route::resource('kegiatan', AdminKegiatanController::class);
+
+    // 3e. CRUD Jadwal Dokter
     Route::resource('jadwal', AdminJadwalController::class)->except(['show']);
     Route::post('/jadwal/{id}/add-libur', [AdminJadwalController::class, 'addLibur'])->name('jadwal.add-libur');
     Route::delete('/jadwal/libur/{id}', [AdminJadwalController::class, 'deleteLibur'])->name('jadwal.delete-libur');
 
-    // 3e. Kontak Klinik
+    // 3f. Kontak Klinik
     Route::get('/kontak', [AdminKontakController::class, 'index'])->name('kontak.index');
     Route::put('/kontak/{id}', [AdminKontakController::class, 'update'])->name('kontak.update');
 
-    // 3f. Kelola Admin
+    // 3g. Kelola Admin (HANYA AKSES MASTER)
     Route::get('/admins', [AdminController::class, 'index'])->name('admins.index');
     Route::get('/admins/create', [AdminController::class, 'create'])->name('admins.create');
     Route::post('/admins', [AdminController::class, 'store'])->name('admins.store');

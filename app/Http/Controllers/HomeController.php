@@ -8,7 +8,7 @@ class HomeController extends Controller
 {
     public function index()
     {
-        $layananUnggulan = LayananMedis::where('status_aktif', 'aktif')->limit(3)->get();
+       $layananUnggulan = LayananMedis::latest()->take(3)->get();
         return view('home', compact('layananUnggulan'));
     }
 }

@@ -11,7 +11,7 @@
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            @forelse($jadwal as $item)
+            @forelse($jadwals as $item)
             <a href="{{ route('jadwal.detail', $item->id_jadwal) }}" class="block">
                 <div class="bg-white rounded-xl shadow-md p-4 hover:shadow-lg transition hover:-translate-y-1 border border-gray-100">
                     <div class="flex items-center justify-between">
@@ -22,15 +22,39 @@
                             <div>
                                 <h3 class="text-lg font-bold text-[#10453f]">{{ $item->nama_dokter }}</h3>
                                 <div class="flex items-center gap-2 text-sm text-gray-500">
-                                    <span>
+                                  <span>
                                         @php
-                                            $hari = $item->hari_praktik ?? [];
+                                            // Ambil data hari_praktik
+                                            $hariData = $item->hari_praktik;
+                                            
+                                            // Jika masih string, decode jadi array
+                                            if (is_string($hariData)) {
+                                                $hariData = json_decode($hariData, true);
+                                            }
+                                            
+                                            // Jika bukan array, gunakan array kosong
+                                            if (!is_array($hariData)) {
+                                                $hariData = [];
+                                            }
+                                            
+                                            // Cari hari yang aktif
                                             $aktif = [];
-                                            foreach($hari as $key => $status) {
-                                                if($status == 'aktif') {
-                                                    $aktif[] = ucfirst($key);
+                                            $namaHari = [
+                                                'senin' => 'Senin',
+                                                'selasa' => 'Selasa',
+                                                'rabu' => 'Rabu',
+                                                'kamis' => 'Kamis',
+                                                'jumat' => 'Jumat',
+                                                'sabtu' => 'Sabtu',
+                                                'minggu' => 'Minggu'
+                                            ];
+                                            
+                                            foreach($hariData as $key => $status) {
+                                                if($status == 'aktif' || $status === true || $status == '1') {
+                                                    $aktif[] = $namaHari[$key] ?? ucfirst($key);
                                                 }
                                             }
+                                            
                                             echo implode(', ', $aktif);
                                         @endphp
                                     </span>
@@ -40,10 +64,22 @@
                             </div>
                         </div>
                         <div class="flex items-center gap-3">
-                            @php
+                           @php
                                 $status = 'libur';
-                                foreach($item->hari_praktik ?? [] as $s) {
-                                    if($s == 'aktif') { $status = 'aktif'; break; }
+                                $hariData = $item->hari_praktik;
+                                
+                                // Decode jika masih string
+                                if (is_string($hariData)) {
+                                    $hariData = json_decode($hariData, true);
+                                }
+                                
+                                if (is_array($hariData)) {
+                                    foreach($hariData as $s) {
+                                        if($s == 'aktif' || $s === true || $s == '1') { 
+                                            $status = 'aktif'; 
+                                            break; 
+                                        }
+                                    }
                                 }
                             @endphp
                             <span class="px-3 py-1 rounded-full text-xs 

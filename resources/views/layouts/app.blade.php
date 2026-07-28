@@ -34,7 +34,7 @@
                     </div>
                 </div>
 
-               <!-- Menu Desktop -->
+                <!-- Menu Desktop -->
                 <div class="hidden md:flex space-x-6">
                     <a href="{{ route('home') }}" 
                     class="nav-link text-gray-700 hover:text-green-700 font-medium {{ request()->routeIs('home') ? 'text-green-700 border-b-2 border-green-700' : '' }}">
@@ -56,6 +56,11 @@
                     class="nav-link text-gray-700 hover:text-green-700 font-medium {{ request()->routeIs('kontak') ? 'text-green-700 border-b-2 border-green-700' : '' }}">
                         Kontak
                     </a>
+                    {{-- ✅ TAMBAHKAN MENU BERITA & KEGIATAN --}}
+                    <a href="{{ route('kegiatan.index') }}" 
+                    class="nav-link text-gray-700 hover:text-green-700 font-medium {{ request()->routeIs('kegiatan.index') ? 'text-green-700 border-b-2 border-green-700' : '' }}">
+                        Berita & Kegiatan
+                    </a>
                     <a href="{{ route('login') }}" 
                     class="text-green-700 font-semibold {{ request()->routeIs('login') ? 'border-b-2 border-green-700' : '' }}">
                         Admin
@@ -69,34 +74,38 @@
 
             </div>
 
-            <!-- Mobile Menu -->
-            <div id="mobile-menu" class="hidden md:hidden mt-4 pb-4 border-t border-gray-100 pt-4">
-                <a href="{{ route('home') }}" 
-                class="block py-2 {{ request()->routeIs('home') ? 'text-green-700 font-semibold' : 'text-gray-700 hover:text-green-700' }}">
-                    Beranda
-                </a>
-                <a href="{{ route('profil') }}" 
-                class="block py-2 {{ request()->routeIs('profil') ? 'text-green-700 font-semibold' : 'text-gray-700 hover:text-green-700' }}">
-                    Profil Klinik
-                </a>
-                <a href="{{ route('layanan') }}" 
-                class="block py-2 {{ request()->routeIs('layanan') ? 'text-green-700 font-semibold' : 'text-gray-700 hover:text-green-700' }}">
-                    Layanan Medis
-                </a>
-                <a href="{{ route('jadwal') }}" 
-                class="block py-2 {{ request()->routeIs('jadwal') ? 'text-green-700 font-semibold' : 'text-gray-700 hover:text-green-700' }}">
-                    Jadwal Dokter
-                </a>
-                <a href="{{ route('kontak') }}" 
-                class="block py-2 {{ request()->routeIs('kontak') ? 'text-green-700 font-semibold' : 'text-gray-700 hover:text-green-700' }}">
-                    Kontak
-                </a>
-                <a href="{{ route('login') }}" 
-                class="block py-2 {{ request()->routeIs('login') ? 'text-green-700 font-semibold' : 'text-green-700 hover:text-green-800' }}">
-                    Admin
-                </a>
-            </div>
-
+                <!-- Mobile Menu -->
+                <div id="mobile-menu" class="hidden md:hidden mt-4 pb-4 border-t border-gray-100 pt-4">
+                    <a href="{{ route('home') }}" 
+                    class="block py-2 {{ request()->routeIs('home') ? 'text-green-700 font-semibold' : 'text-gray-700 hover:text-green-700' }}">
+                        Beranda
+                    </a>
+                    <a href="{{ route('profil') }}" 
+                    class="block py-2 {{ request()->routeIs('profil') ? 'text-green-700 font-semibold' : 'text-gray-700 hover:text-green-700' }}">
+                        Profil Klinik
+                    </a>
+                    <a href="{{ route('layanan') }}" 
+                    class="block py-2 {{ request()->routeIs('layanan') ? 'text-green-700 font-semibold' : 'text-gray-700 hover:text-green-700' }}">
+                        Layanan Medis
+                    </a>
+                    <a href="{{ route('jadwal') }}" 
+                    class="block py-2 {{ request()->routeIs('jadwal') ? 'text-green-700 font-semibold' : 'text-gray-700 hover:text-green-700' }}">
+                        Jadwal Dokter
+                    </a>
+                    <a href="{{ route('kontak') }}" 
+                    class="block py-2 {{ request()->routeIs('kontak') ? 'text-green-700 font-semibold' : 'text-gray-700 hover:text-green-700' }}">
+                        Kontak
+                    </a>
+                    <a href="{{ route('kegiatan.index') }}" 
+                    class="block py-2 {{ request()->routeIs('kegiatan.index') ? 'text-green-700 font-semibold' : 'text-gray-700 hover:text-green-700' }}">
+                        Berita & Kegiatan
+                    </a>
+                    <a href="{{ route('login') }}" 
+                    class="block py-2 {{ request()->routeIs('login') ? 'text-green-700 font-semibold' : 'text-green-700 hover:text-green-800' }}">
+                        Admin
+                    </a>
+                </div>
+        
         </div>
     </nav>
 

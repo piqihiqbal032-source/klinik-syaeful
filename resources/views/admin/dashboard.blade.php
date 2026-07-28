@@ -1,6 +1,27 @@
 @extends('layouts.admin')
 
 @section('content')
+<!-- Notifikasi Error -->
+@if(session('error'))
+<div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded-lg mb-6 flex items-center" role="alert">
+    <i class="fas fa-exclamation-triangle text-red-500 mr-3 text-xl"></i>
+    <div>
+        <p class="font-bold">Akses Ditolak!</p>
+        <p>{{ session('error') }}</p>
+    </div>
+</div>
+@endif
+
+<!-- Notifikasi Success -->
+@if(session('success'))
+<div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 rounded-lg mb-6 flex items-center" role="alert">
+    <i class="fas fa-check-circle text-green-500 mr-3 text-xl"></i>
+    <div>
+        <p>{{ session('success') }}</p>
+    </div>
+</div>
+@endif
+
 <!-- Header -->
 <div class="mb-8">
     <h2 class="text-3xl font-bold text-[#10453f]">DASHBOARD ADMIN</h2>
