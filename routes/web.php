@@ -69,10 +69,9 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
 
     // 3d. CRUD Berita & Kegiatan
     Route::resource('kegiatan', AdminKegiatanController::class);
-    Route::middleware(['auth', 'web'])->prefix('admin')->name('admin.')->group(function () {
-    // Tambahkan baris ini agar route admin.categories.store aktif
+    
+    // Rute simpan kategori cepat (Cukup ditulis langsung tanpa grup tambahan)
     Route::post('/categories', [CategoryController::class, 'store'])->name('categories.store');
-    });
 
     // 3e. CRUD Jadwal Dokter
     Route::resource('jadwal', AdminJadwalController::class)->except(['show']);
