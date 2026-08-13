@@ -28,8 +28,8 @@ RUN npm ci || npm install
 RUN npm run build
 # ------------------------------------------------------
 
-# Setup environment
-RUN if [ -f .env.production ]; then cp .env.production .env; else touch .env; fi
+# Hapus atau lewati pembuatan file .env manual agar Laravel membaca dari Environment Render
+RUN php artisan config:clear && php artisan cache:clear
 
 # Generate Key & Storage Link
 RUN php artisan key:generate --force
