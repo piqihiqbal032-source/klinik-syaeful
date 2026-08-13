@@ -32,6 +32,10 @@ RUN npm run build
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache /var/www/html/public
 RUN chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
 
+# Mengarahkan Apache DocumentRoot ke folder public Laravel
+RUN sed -i 's|/var/www/html|/var/www/html/public|g' /etc/apache2/sites-available/000-default.conf
+RUN a2enmod rewrite
+
 # Berikan izin eksekusi pada script entrypoint
 RUN chmod +x /var/www/html/entrypoint.sh
 
