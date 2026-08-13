@@ -23,16 +23,12 @@ COPY . .
 # Install dependency Composer
 RUN composer install --no-dev --optimize-autoloader
 
-# --- TAMBAHAN UNTUK CSS & JS BUILD (TAILWIND / VITE) ---
+# --- BUILD CSS & JS (TAILWIND / VITE) ---
 RUN npm ci || npm install
 RUN npm run build
-# ------------------------------------------------------
+# ----------------------------------------
 
-# Generate Key & Storage Link
-RUN php artisan key:generate --force
-RUN php artisan storage:link --force
-
-# Atur izin folder (termasuk folder public/build hasil npm run build)
+# Atur izin folder dasar
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache /var/www/html/public
 RUN chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
 
