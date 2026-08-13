@@ -45,6 +45,18 @@
             </div>
         </div>
 
+        <div class="form-group">
+            <label for="category_id">Kategori</label>
+            <select name="category_id" class="form-control" required>
+                <option value="">-- Pilih Kategori --</option>
+                @foreach(\App\Models\Category::all() as $category)
+                    <option value="{{ $category->id }}" {{ (isset($kegiatan) && $kegiatan->category_id == $category->id) ? 'selected' : '' }}>
+                        {{ $category->name }}
+                    </option>
+                @endforeach
+            </select>
+        </div>
+
         <div class="mb-6">
             <label class="block text-gray-700 font-semibold mb-2">Status</label>
             <select name="status" class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-[#10453f] outline-none">

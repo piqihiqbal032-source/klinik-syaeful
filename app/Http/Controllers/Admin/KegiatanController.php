@@ -17,7 +17,8 @@ class KegiatanController extends Controller
 
     public function create()
     {
-        return view('admin.kegiatan.create');
+        $categories = \App\Models\Category::all();
+        return view('admin.kegiatan.create', compact('categories'));
     }
 
     public function store(Request $request)
@@ -25,6 +26,7 @@ class KegiatanController extends Controller
         $request->validate([
             'judul' => 'required|max:255',
             'instagram_url' => 'required|url',
+            'category_id' => 'required|exists:categories,id',
             'status' => 'required|in:aktif,tidak_aktif',
         ]);
 
@@ -48,6 +50,7 @@ class KegiatanController extends Controller
             'judul' => 'required|max:255',
             'deskripsi' => 'nullable',
             'instagram_url' => 'required|url',
+            'category_id' => 'required|exists:categories,id',
             'gambar' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
             'status' => 'required|in:aktif,tidak_aktif',
         ]);

@@ -25,6 +25,11 @@ class Kegiatan extends Model
         return $this->instagram_url;
     }
 
+    public function category()
+    {
+        return $this->belongsTo(Category::class, 'category_id');
+    }
+
     public function scopeAktif($query)
     {
         return $query->where('status', 'aktif');
