@@ -18,6 +18,7 @@ use App\Http\Controllers\Admin\JadwalController as AdminJadwalController;
 use App\Http\Controllers\Admin\KontakController as AdminKontakController;
 use App\Http\Controllers\Admin\KegiatanController as AdminKegiatanController;
 use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Admin\CategoryController;
 
 /*
 |--------------------------------------------------------------------------
@@ -68,6 +69,10 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
 
     // 3d. CRUD Berita & Kegiatan
     Route::resource('kegiatan', AdminKegiatanController::class);
+    Route::middleware(['auth', 'web'])->prefix('admin')->name('admin.')->group(function () {
+    // Tambahkan baris ini agar route admin.categories.store aktif
+    Route::post('/categories', [CategoryController::class, 'store'])->name('categories.store');
+    });
 
     // 3e. CRUD Jadwal Dokter
     Route::resource('jadwal', AdminJadwalController::class)->except(['show']);
