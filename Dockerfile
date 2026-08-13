@@ -28,9 +28,6 @@ RUN npm ci || npm install
 RUN npm run build
 # ------------------------------------------------------
 
-# Hapus atau lewati pembuatan file .env manual agar Laravel membaca dari Environment Render
-RUN php artisan config:clear && php artisan cache:clear
-
 # Generate Key & Storage Link
 RUN php artisan key:generate --force
 RUN php artisan storage:link --force
