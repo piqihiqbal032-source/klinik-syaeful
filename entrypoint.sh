@@ -10,5 +10,5 @@ php artisan cache:clear
 echo "=== Menjalankan Migrasi Database PostgreSQL ==="
 php artisan migrate --force
 
-echo "=== Memulai Web Server Laravel ==="
-exec php artisan serve --host=0.0.0.0 --port=8000
+echo "=== Memulai Web Server Apache ==="
+exec apache2-foreground
