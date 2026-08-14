@@ -70,8 +70,10 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     // 3d. CRUD Berita & Kegiatan
     Route::resource('kegiatan', AdminKegiatanController::class);
     
-    // Rute simpan kategori cepat (Cukup ditulis langsung tanpa grup tambahan)
-    Route::post('/categories', [CategoryController::class, 'store'])->name('categories.store');
+   // Rute untuk Kelola Kategori di dalam AdminKegiatanController
+    Route::get('/kegiatan-categories', [AdminKegiatanController::class, 'categoryIndex'])->name('categories.index');
+    Route::post('/categories', [AdminKegiatanController::class, 'categoryStore'])->name('categories.store');
+    Route::delete('/categories/{category}', [AdminKegiatanController::class, 'categoryDestroy'])->name('categories.destroy');
 
     // 3e. CRUD Jadwal Dokter
     Route::resource('jadwal', AdminJadwalController::class)->except(['show']);

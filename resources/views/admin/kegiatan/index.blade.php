@@ -2,13 +2,19 @@
 
 @section('content')
 <div class="bg-white rounded-lg shadow-lg p-6">
+    {{-- Header dengan Tombol Kategori & Tambah Kegiatan (Sudah Bersih dari Duplikasi) --}}
     <div class="flex justify-between items-center mb-6">
         <h1 class="text-2xl font-bold text-[#10453f]">Kelola Kegiatan</h1>
-        <a href="{{ route('admin.kegiatan.create') }}" class="bg-[#10453f] text-white px-4 py-2 rounded-lg hover:bg-[#1a6b5f] transition">
-            <i class="fas fa-plus mr-1"></i> Tambah Kegiatan
-        </a>
+        <div class="flex gap-2">
+            <a href="{{ route('admin.categories.index') }}" class="bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition">
+                + Kategori
+            </a>
+            <a href="{{ route('admin.kegiatan.create') }}" class="bg-[#10453f] text-white px-4 py-2 rounded-lg hover:bg-[#1a6b5f] transition">
+                <i class="fas fa-plus mr-1"></i> Tambah Kegiatan
+            </a>
+        </div>
     </div>
-
+    
     @if(session('success'))
     <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
         {{ session('success') }}

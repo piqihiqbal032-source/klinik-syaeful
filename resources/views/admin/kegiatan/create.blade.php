@@ -9,24 +9,18 @@
         </a>
     </div>
 
-    {{-- TAG <FORM> DIBUKA DI SINI AGAR SEMUA INPUT DI DALAMNYA IKUT TERKIRIM --}}
     <form action="{{ route('admin.kegiatan.store') }}" method="POST">
         @csrf
 
-        {{-- Pilihan Kategori + Tombol Buat Baru --}}
+        {{-- Pilihan Kategori (Bersih tanpa modal) --}}
         <div class="form-group mb-4">
             <label for="category_id" class="block font-semibold mb-2">Kategori <span class="text-red-500">*</span></label>
-            <div class="flex gap-2">
-                <select name="category_id" id="category_select" class="form-control w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-[#10453f] outline-none" required>
-                    <option value="">-- Pilih Kategori --</option>
-                    @foreach($categories as $category)
-                        <option value="{{ $category->id }}">{{ $category->name }}</option>
-                    @endforeach
-                </select>
-                <button type="button" onclick="toggleCategoryModal()" class="bg-green-600 text-white px-4 py-2 rounded-lg whitespace-nowrap hover:bg-green-700 transition">
-                    + Buat Baru
-                </button>
-            </div>
+            <select name="category_id" id="category_select" class="form-control w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-[#10453f] outline-none" required>
+                <option value="">-- Pilih Kategori --</option>
+                @foreach($categories as $category)
+                    <option value="{{ $category->id }}">{{ $category->name }}</option>
+                @endforeach
+            </select>
         </div>
 
         <div class="mb-4">
@@ -72,7 +66,6 @@
             </a>
         </div>
     </form>
-    {{-- PENUTUP FORM UTAMA --}}
 
     {{-- Preview Instagram --}}
     <div class="mt-8 p-4 bg-gray-50 rounded-lg">
@@ -83,66 +76,4 @@
         </div>
     </div>
 </div>
-
-<!-- Modal / Kotak Tambah Kategori Cepat -->
-<div id="categoryModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-50">
-    <div class="bg-white p-6 rounded-lg w-96 shadow-lg">
-        <h3 class="text-lg font-bold mb-4">Buat Kategori Baru</h3>
-        
-        <div class="mb-4">
-            <label class="block text-sm font-medium mb-1">Nama Kategori</label>
-            <input type="text" id="new_category_name" class="w-full border border-gray-300 p-2 rounded outline-none focus:ring-2 focus:ring-[#10453f]" placeholder="Contoh: Pengumuman">
-        </div>
-
-        <div class="flex justify-end space-x-2">
-            <button type="button" onclick="toggleCategoryModal()" class="bg-gray-400 text-white px-3 py-1 rounded hover:bg-gray-500">Batal</button>
-            <button type="button" onclick="saveNewCategory()" class="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700">Simpan</button>
-        </div>
-    </div>
-</div>
-
-<!-- JavaScript Sederhana untuk Modal dan Ajax Simpan Kategori -->
-<script>
-function toggleCategoryModal() {
-    const modal = document.getElementById('categoryModal');
-    modal.classList.toggle('hidden');
-}
-
-function saveNewCategory() {
-    const name = document.getElementById('new_category_name').value;
-    if (!name) {
-        alert('Nama kategori tidak boleh kosong!');
-        return;
-    }
-
-    fetch("{{ route('admin.categories.store') }}", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            "X-CSRF-TOKEN": "{{ csrf_token() }}"
-        },
-        body: JSON.stringify({ name: name })
-    })
-    .then(response => response.json())
-    .then(data => {
-        if(data.success) {
-            const select = document.getElementById('category_select');
-            const option = document.createElement('option');
-            option.value = data.category.id;
-            option.text = data.category.name;
-            option.selected = true;
-            select.appendChild(option);
-
-            document.getElementById('new_category_name').value = '';
-            toggleCategoryModal();
-        } else {
-            alert('Gagal menyimpan kategori');
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        alert('Terjadi kesalahan sistem.');
-    });
-}
-</script>
 @endsection
