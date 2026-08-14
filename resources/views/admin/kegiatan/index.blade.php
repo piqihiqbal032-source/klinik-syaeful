@@ -2,7 +2,6 @@
 
 @section('content')
 <div class="bg-white rounded-lg shadow-lg p-6">
-    {{-- Header dengan Tombol Kategori & Tambah Kegiatan (Sudah Bersih dari Duplikasi) --}}
     <div class="flex justify-between items-center mb-6">
         <h1 class="text-2xl font-bold text-[#10453f]">Kelola Kegiatan</h1>
         <div class="flex gap-2">
@@ -28,6 +27,7 @@
                 <tr class="bg-gray-50">
                     <th class="p-3 text-left text-xs font-semibold text-gray-600 uppercase">#</th>
                     <th class="p-3 text-left text-xs font-semibold text-gray-600 uppercase">Judul</th>
+                    <th class="p-3 text-left text-xs font-semibold text-gray-600 uppercase">Kategori</th> {{-- KOLOM BARU --}}
                     <th class="p-3 text-left text-xs font-semibold text-gray-600 uppercase">URL Instagram</th>
                     <th class="p-3 text-left text-xs font-semibold text-gray-600 uppercase">Status</th>
                     <th class="p-3 text-left text-xs font-semibold text-gray-600 uppercase">Dibuat</th>
@@ -39,6 +39,18 @@
                 <tr class="border-b hover:bg-gray-50 transition">
                     <td class="p-3 text-sm">{{ $loop->iteration }}</td>
                     <td class="p-3 text-sm font-medium">{{ $kegiatan->judul }}</td>
+                    
+                    {{-- MENAMPILKAN NAMA KATEGORI DENGAN BADGE WARNA --}}
+                    <td class="p-3 text-sm">
+                        @if($kegiatan->category)
+                            <span class="bg-teal-100 text-[#10453f] text-xs font-semibold px-2.5 py-1 rounded-full">
+                                {{ $kegiatan->category->name }}
+                            </span>
+                        @else
+                            <span class="text-gray-400 italic text-xs">Tanpa Kategori</span>
+                        @endif
+                    </td>
+
                     <td class="p-3 text-sm">
                         <a href="{{ $kegiatan->instagram_url }}" target="_blank" class="text-blue-600 hover:underline">
                             <i class="fab fa-instagram mr-1"></i> Lihat Postingan
@@ -50,7 +62,7 @@
                             {{ ucfirst($kegiatan->status) }}
                         </span>
                     </td>
-                    <td class="p-3 text-sm text-gray-500">{{ $kegiatan->created_at->format('d M Y') }}</td>
+                    <td class="p-3 text-sm text-gray-500">{{ $kegiatan->created_at ? $kegiatan->created_at->format('d M Y') : '-' }}</td>
                     <td class="p-3">
                         <a href="{{ route('admin.kegiatan.edit', $kegiatan->id) }}" 
                            class="text-blue-600 hover:text-blue-800 mr-2 text-sm">
