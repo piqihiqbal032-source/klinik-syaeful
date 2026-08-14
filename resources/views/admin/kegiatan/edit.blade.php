@@ -45,9 +45,10 @@
             </div>
         </div>
 
-        <div class="form-group">
-            <label for="category_id">Kategori</label>
-            <select name="category_id" class="form-control" required>
+        {{-- Kategori dengan Desain Tailwind yang Seragam & Rapi --}}
+        <div class="mb-4">
+            <label for="category_id" class="block text-gray-700 font-semibold mb-2">Kategori <span class="text-red-500">*</span></label>
+            <select name="category_id" id="category_id" class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-[#10453f] outline-none bg-white" required>
                 <option value="">-- Pilih Kategori --</option>
                 @foreach(\App\Models\Category::all() as $category)
                     <option value="{{ $category->id }}" {{ (isset($kegiatan) && $kegiatan->category_id == $category->id) ? 'selected' : '' }}>
