@@ -9,6 +9,7 @@ class Kegiatan extends Model
     protected $table = 'kegiatan';
     
     protected $fillable = [
+        'category_id', // <-- TAMBAHKAN BARIS INI
         'judul',
         'instagram_url',
         'status',
